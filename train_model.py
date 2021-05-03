@@ -19,8 +19,8 @@ import warnings
 warnings.filterwarnings("ignore")
 
 # data
-rrsData = pickle.load( open( "/gdrive/My Drive/sensorIDX_rrs.p", "rb" ) )
-refData = pickle.load( open( "/Users/jkravz311/GoogleDrive/sensorIDX_ref.p", "rb" ) )
+rrsData = pickle.load( open( "/content/drive/sensorIDX_rrs.p", "rb" ) )
+#refData = pickle.load( open( "/Users/jkravz311/GoogleDrive/sensorIDX_ref.p", "rb" ) )
 
 # batch setup
 info = {'sensorID' : {'s2_60m':['443','490','560','665','705','740','783','842','865'],
