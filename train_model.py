@@ -19,7 +19,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 # data
-rrsData = pickle.load( open( "/Users/jkravz311/GoogleDrive/sensorIDX_rrs.p", "rb" ) )
+rrsData = pickle.load( open( "/gdrive/My Drive/sensorIDX_rrs.p", "rb" ) )
 refData = pickle.load( open( "/Users/jkravz311/GoogleDrive/sensorIDX_ref.p", "rb" ) )
 
 # batch setup
