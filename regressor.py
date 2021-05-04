@@ -8,36 +8,40 @@ Created on Mon May  3 11:21:44 2021
 import numpy as np
 import pandas as pd
 import timeit
+import keras
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.neighbors import KNeighborsRegressor
 #import xgboost as xgb
 #from xgboost.sklearn import XGBRegressor
 from sklearn.multioutput import MultiOutputRegressor
-from MLP import MLPr_ref, MLPr_rrs
-#from MDN import MDNr_ref, MDNr_rrs
+from models import CNNreg_rrs, MLPreg_rrs
 from keras.wrappers.scikit_learn import KerasRegressor
-#import mdn
 from sklearn.model_selection import KFold
-from sklearn.model_selection import train_test_split
 import helpers as hp
-from keras.callbacks import EarlyStopping
 
 
-def regressor(reg,X,y,scoreDict,epoch,cv=5):
-        
+def regressor(reg,X,y,scoreDict,epoch,batch,cv=5):
+    
+    callbacks_list = [
+        keras.callbacks.ModelCheckpoint(
+            filepath='best_model.{epoch:02d}-{val_loss:.2f}.h5',
+            monitor='val_loss', save_best_only=True),
+        keras.callbacks.EarlyStopping(monitor='val_loss', patience=10)
+        ]
+    
     # get feature/target dims
-    N_dims = X.shape[1]
+    N_dims = X.shape
     try:
         N_out = y.shape[1]
     except:
         N_out = 1
-    N_mixes = 20
+        
     # estimators
     funcs = {'RFR': RandomForestRegressor(n_estimators=150, min_samples_leaf=2, n_jobs=-1),
              'KNR': KNeighborsRegressor(leaf_size=30, metric='minkowski', n_neighbors=2, p=4, n_jobs=-1),
              #'XGBR': MultiOutputRegressor(xgb.XGBRegressor(objective='reg:squarederror',n_estimators=500,max_depth=6,gamma=.4)),
-             'MLPref': MLPr_ref(N_dims,N_out),
-             'MLPrrs': MLPr_rrs(N_dims,N_out),
+             #'MLPref': MLPreg_ref(N_dims,N_out),
+             'MLPrrs': MLPreg_rrs(N_dims,N_out),
              #'MDNref': MDNr_ref(N_dims,N_out),
              #'MDNrrs': MDNr_rrs(N_dims,N_out)
              }
@@ -53,13 +57,10 @@ def regressor(reg,X,y,scoreDict,epoch,cv=5):
     for train, test in kfold.split(X, y):
     #for k in range(cv):
         print ('# Fold {} #'.format(count))
-        if reg in ['MLPref','MLPrrs','MDNref','MDNrrs']:
-            if reg in ['MLPref']:
-                batch = 64
-            else:
-                batch = 16
+        if reg in ['MLPref','MLPrrs','CNNrrs']:
             model = KerasRegressor(build_fn=estimator, epochs=epoch, 
-                                   batch_size=batch,validation_split=0.1)
+                                   batch_size=batch, validation_split=0.1,
+                                   callbacks=callbacks_list)
         else:
             model = estimator
         X_train, X_test = X.iloc[train,:], X.iloc[test,:]

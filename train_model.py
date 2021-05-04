@@ -19,7 +19,8 @@ import warnings
 warnings.filterwarnings("ignore")
 
 # data
-rrsData = pickle.load( open( "/content/drive/My Drive/sensorIDX_rrs.p", "rb" ) )
+#rrsData = pickle.load( open( "/content/drive/My Drive/sensorIDX_rrs.p", "rb" ) )
+rrsData = pickle.load( open( "/Users/jkravz311/GoogleDrive/sensorIDX_rrs.p", "rb" ) )
 #refData = pickle.load( open( "/Users/jkravz311/GoogleDrive/sensorIDX_ref.p", "rb" ) )
 
 # batch setup
@@ -53,10 +54,8 @@ sensor = 'hico'
 targets = ['chl','PC','cnap','cdom','admix','aphy440','ag440','anap440','bbphy440','bbnap440','cluster']
 X,y, scaler = getXY(atcor,rrsData,sensor,targets,info,xlog=True,ylog=True)
 
-# Train and get results
-result = regressor('MLPrrs',X,y,info['regLogScore'],cv=2,epoch=100)
-
-
+# results
+mlp_result = regressor('MLPrrs', X, y, info['regLogScore'],epoch=100,batch=128,cv=2)
 
 
 
