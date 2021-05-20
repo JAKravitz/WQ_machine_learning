@@ -47,9 +47,6 @@ def getXY(atcor,data,sensor,targets,info,xlog=True,ylog=True):
     
     if ylog == True:
         y = pd.DataFrame(np.where(y>0,np.log(y),y),index=y.index.values,columns=y.columns)
-        y['cluster'] = data['cluster']
-    else:
-        y['cluster'] = data['cluster']
     
     if xlog == True:
         X = pd.DataFrame(np.where(X>0,np.log(X),X),index=X.index.values,columns=X.columns)

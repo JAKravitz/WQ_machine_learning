@@ -42,22 +42,24 @@ def evaluate(y_test,y_hat,results,scoreDict,log=False):
     return results
 
 ################################################################################
-def results_prep(y):
+def prep_MDN(y_train, credsdf):
     results = {}
-    for var in y.columns:
+    for var in y_train.columns:
         if var == 'cluster':
             continue
         results[var] = {'ytest': [],
-                        'yhat': [],
-                        'R2': [],
-                        'RMSE': [],
-                        'RMSELE': [],
-                        'Bias': [],
-                        'MAPE': [],
-                        'rRMSE': []}
+                             'yhat': [],
+                             'y_dist': [],
+                             'R2': [],
+                             'RMSE': [],
+                             'RMSELE': [],
+                             'Bias': [],
+                             'MAPE': [],
+                             'rRMSE': []}
         results['fit_time'] = []
         results['pred_time'] = []
-    return results
+        results['history'] = []
+        results['cred_int'] = credsdf
 
 ################################################################################
 def clf_results_prep(y):
