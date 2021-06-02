@@ -15,6 +15,7 @@ def clean(data):
     return data
 
 def getXY(atcor,data,sensor,targets,info,xlog=True,ylog=True):
+
     
     # get sensor data
     if sensor in ['s2_20m','s2_10m']:
