@@ -66,13 +66,18 @@ runs['targets'] = {'tot': y_tot,
                    'nap_log': np.log(y_nap)}
 
 #%% 
+logs = ['tot_log','a_log','phy_log','ag_log','nap_log']
+
 results = {}
 for f in runs['features']:
     for t in runs['targets']:
         
         X = runs['features'][f]
         y = runs['targets'][t]
-        out = reg_cross_val(X, y, train_info, 'regLogScore')
+        if t in logs:
+            out = reg_cross_val(X, y, ti=train_info, scores='regLogScore')
+        else:
+            out = reg_cross_val(X, y, ti=train_info, scores='regScore')
         name = '_'.join([f,t])
         results[name] = out
 

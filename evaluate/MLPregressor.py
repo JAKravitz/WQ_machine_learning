@@ -58,14 +58,14 @@ class MLPregressor(BaseEstimator):
         self.pred_time = toc-tic 
         return y_hat
     
-    def evaluate(self,y_hat,y_test,results,scoreDict,log=False):
+    def evaluate(self,y_hat,y_test,results,scoreDict,scores):
         for var in y_test.columns:
             if var in ['adj','cluster']:
                 continue
             #print (var)
             y_t = y_test.loc[:,var].astype(float)
             y_h = y_hat.loc[:,var].astype(float)
-            if log == False:
+            if scores in ['regScore']:
                 true = np.logical_and(y_h > 0, y_t > 0)
                 y_tst = y_t[true]
                 y_ht = y_h[true]

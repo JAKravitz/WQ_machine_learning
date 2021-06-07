@@ -52,7 +52,7 @@ def reg_cross_val(X,y,ti,scores):
                                  'rRMSE': sc.log_rrmse,}
                 }
     
-    scores = scoreDict[scores]
+    scoreDict = scoreDict[scores]
     results = reg_prep_results(y.columns)
     
     kfold = KFold(n_splits=ti['cv'], shuffle=True)
@@ -77,7 +77,7 @@ def reg_cross_val(X,y,ti,scores):
         
         y_hat = model.predict(X_test, y_test)
         
-        final = model.evaluate(y_test,y_hat,results,scores,log=True) 
+        final = model.evaluate(y_test,y_hat,results,scoreDict,scores) 
         count = count+1
     
     return final
