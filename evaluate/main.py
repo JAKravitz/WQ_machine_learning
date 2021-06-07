@@ -69,11 +69,13 @@ runs['targets'] = {'tot': y_tot,
 logs = ['tot_log','a_log','phy_log','ag_log','nap_log']
 
 results = {}
+batch = len(runs['features'].keys()) * len(runs['targets'].keys())
+count = 0
 for f in runs['features']:
     for t in runs['targets']:
         
         name = '_'.join([f,t])
-        print ('\n##### {} #####\n'.format(name))
+        print ('\n##### {} #####\n##### C:{}/{}\n'.format(name,count,batch))
         
         X = runs['features'][f]
         y = runs['targets'][t]
@@ -83,6 +85,7 @@ for f in runs['features']:
             out = reg_cross_val(X, y, ti=train_info, scores='regScore')
         
         results[name] = out
+        count = count+1
 
 # save run to disk
 fname = '/content/drive/My Drive/test_results.p'
