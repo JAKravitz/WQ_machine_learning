@@ -6,9 +6,9 @@ Created on Wed May 19 12:07:14 2021
 @author: jakravit
 """
 #from MDNregressor import MDNregressor
-from MLPregressor import MLPregressor
+from evaluate.MLPregressor import MLPregressor
 from sklearn.model_selection import KFold
-import scorers as sc
+import evaluate.scorers as sc
 import sklearn.metrics as metrics
 
 
@@ -77,7 +77,7 @@ def reg_cross_val(X,y,ti,scores):
         
         y_hat = model.predict(X_test, y_test)
         
-        final = model.evaluate(y_test,y_hat,results,scoreDict,scores) 
+        final = model.evaluate(y_test,y_hat,results,scoreDict) 
         count = count+1
     
     return final

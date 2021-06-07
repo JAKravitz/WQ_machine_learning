@@ -51,8 +51,9 @@ def getXY(data,sensor,targets):
     # clean 
     X = clean(X)
     y = clean(y)   
+    y2 = y + .0001
     
-    return X, y
+    return X, y2
 
 def polyFeatures(data,degree,interaction=False):
     from sklearn.preprocessing import PolynomialFeatures

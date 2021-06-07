@@ -12,8 +12,8 @@ import numpy as np
 # from classifier_eval import classifier
 import warnings
 warnings.filterwarnings("ignore")
-from MLP_cross_val import reg_cross_val
-import features as feats
+from evaluate.MLP_cross_val import reg_cross_val
+import evaluate.features as feats
 import matplotlib.pyplot as plt
 
 # data
@@ -32,7 +32,7 @@ train_info = {'epochs':10,
 # get features, outputs
 atcor = 'rrs'
 sensor = 'hico'
-targets = ['chl','PC','cnap','cdom','admix','aphy440','ag440','anap440','bbphy440','bbnap440']
+targets = ['chl','PC','cnap','cdom','aphy440','ag440','anap440','bbphy440','bbnap440']
 X,y_tot = feats.getXY(rrsData,sensor,targets)
 targets = ['aphy440','ag440','anap440']
 X,y_a = feats.getXY(rrsData,sensor,targets)
@@ -75,7 +75,7 @@ for f in runs['features']:
     for t in runs['targets']:
         
         name = '_'.join([f,t])
-        print ('\n##### {} #####\n##### C:{}/{}\n'.format(name,count,batch))
+        print ('\n##### {} #####\n##### C:{}/{} #####\n'.format(name,count,batch))
         
         X = runs['features'][f]
         y = runs['targets'][t]
