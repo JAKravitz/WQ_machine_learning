@@ -14,7 +14,7 @@ import testing.scorers as sc
 import sklearn.metrics as metrics
 import warnings
 warnings.filterwarnings("ignore")
-from testing.MLP_cross_val import reg_cross_val
+from evaluate.MLP_cross_val import reg_cross_val
 import features as feats
 import featuretools as ft
 import seaborn as sns
