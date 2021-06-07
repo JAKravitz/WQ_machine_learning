@@ -10,14 +10,10 @@ import pickle
 import pandas as pd
 import numpy as np
 # from classifier_eval import classifier
-import evaluate.scorers as sc
-import sklearn.metrics as metrics
 import warnings
 warnings.filterwarnings("ignore")
 from evaluate.MLP_cross_val import reg_cross_val
 import features as feats
-import featuretools as ft
-import seaborn as sns
 import matplotlib.pyplot as plt
 
 # data
