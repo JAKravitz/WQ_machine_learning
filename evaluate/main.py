@@ -12,7 +12,7 @@ import numpy as np
 # from classifier_eval import classifier
 import warnings
 warnings.filterwarnings("ignore")
-from evaluate.MLP_cross_val import reg_cross_val
+from MLP_cross_val import reg_cross_val
 import features as feats
 import matplotlib.pyplot as plt
 

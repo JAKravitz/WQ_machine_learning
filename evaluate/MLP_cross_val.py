@@ -6,9 +6,9 @@ Created on Wed May 19 12:07:14 2021
 @author: jakravit
 """
 #from MDNregressor import MDNregressor
-from evaluate.MLPregressor import MLPregressor
+from MLPregressor import MLPregressor
 from sklearn.model_selection import KFold
-import evaluate.scorers as sc
+import scorers as sc
 import sklearn.metrics as metrics
 
 
