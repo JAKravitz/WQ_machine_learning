@@ -26,7 +26,7 @@ train_info = {'epochs':10,
               'split':.2,
               'n_mixes':5,
               'layers':[512,128,64,32],
-              'cv':3,
+              'cv':2,
               }
 
 # get features, outputs
@@ -46,14 +46,14 @@ X,y_nap = feats.getXY(rrsData,sensor,targets)
 #%%
 runs = {}
 runs['features'] = {'X': X,
-                    'minmax': feats.minMaxScale(X, (X.min()).min(), (X.max()).max()),
-                    'standard': feats.standardScale(X),
-                    'maxabs': feats.maxAbs(X),
-                    'robust': feats.robust(X),
-                    'quantile': feats.quantile(X),
+                    'minmax': pd.DataFrame(feats.minMaxScale(X, (X.min()).min(), (X.max()).max())),
+                    'standard': pd.DataFrame(feats.standardScale(X)),
+                    'maxabs': pd.DataFrame(feats.maxAbs(X)),
+                    'robust': pd.DataFrame(feats.robust(X)),
+                    'quantile': pd.DataFrame(feats.quantile(X)),
                     'log': np.log(X),
-                    'power': feats.power(X),
-                    'norm': feats.l2norm(X)}
+                    'power': pd.DataFrame(feats.power(X)),
+                    'norm': pd.DataFrame(feats.l2norm(X))}
 runs['targets'] = {'tot': y_tot,
                    'a': y_a,
                    'phy': y_phy,
