@@ -17,9 +17,8 @@ import features as feats
 import matplotlib.pyplot as plt
 
 # data
-#rrsData = pickle.load( open( "/content/drive/My Drive/sensorIDX_rrs.p", "rb" ) )
-#rrsData = pickle.load( open( "/content/drive/MyDrive/sensorIDX_rrs.p", "rb" ) )
-rrsData = pickle.load( open( "/Users/jakravit/Desktop/npp_projects/ML/sensorIDX_rrs.p", "rb" ) )
+rrsData = pickle.load( open( "/content/drive/My Drive/sensorIDX_rrs.p", "rb" ) )
+#rrsData = pickle.load( open( "/Users/jakravit/Desktop/npp_projects/ML/sensorIDX_rrs.p", "rb" ) )
 
 train_info = {'epochs':10,
               'batch_size':512,
