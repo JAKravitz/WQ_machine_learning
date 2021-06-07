@@ -10,7 +10,7 @@ import pickle
 import pandas as pd
 import numpy as np
 # from classifier_eval import classifier
-import testing.scorers as sc
+import evaluate.scorers as sc
 import sklearn.metrics as metrics
 import warnings
 warnings.filterwarnings("ignore")
