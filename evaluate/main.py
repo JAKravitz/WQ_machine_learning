@@ -72,13 +72,16 @@ results = {}
 for f in runs['features']:
     for t in runs['targets']:
         
+        name = '_'.join([f,t])
+        print ('\n##### {} #####\n'.format(name))
+        
         X = runs['features'][f]
         y = runs['targets'][t]
         if t in logs:
             out = reg_cross_val(X, y, ti=train_info, scores='regLogScore')
         else:
             out = reg_cross_val(X, y, ti=train_info, scores='regScore')
-        name = '_'.join([f,t])
+        
         results[name] = out
 
 # save run to disk
