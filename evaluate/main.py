@@ -87,11 +87,11 @@ for f in runs['features']:
         results[name] = out
         count = count+1
 
-# save run to disk
-fname = '/content/drive/My Drive/test_results.p'
-f = open(fname,'wb')
-pickle.dump(results,f)
-f.close() 
+        # save run to disk
+        fname = '/content/drive/My Drive/ML_results/{}.p'.format(name)
+        f = open(fname,'wb')
+        pickle.dump(results,f)
+        f.close() 
 
 #%%
 #test = pickle.load( open( "/Users/jakravit/Desktop/test_results.p", "rb" ) )
