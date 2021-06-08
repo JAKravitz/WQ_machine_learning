@@ -58,26 +58,27 @@ class MLPregressor(BaseEstimator):
         self.pred_time = toc-tic 
         return y_hat
     
-    def evaluate(self,y_hat,y_test,results,scoreDict):
+    def evaluate(self,y_hat,y_test,results,scoreDict,scores):
         for var in y_test.columns:
             if var in ['adj','cluster','admix']:
                 continue
             #print (var)
             y_t = y_test.loc[:,var].astype(float)
             y_h = y_hat.loc[:,var].astype(float)
-            # if scores in ['regScore']:
-            #     true = np.logical_and(y_h > 0, y_t > 0)
-            #     y_tst = y_t[true]
-            #     y_ht = y_h[true]
-            # else:
-            #     y_tst = y_t
-            #     y_ht = y_h
+            
+            if scores in ['regScore']:
+                true = np.logical_and(y_h > 0, y_t > 0)
+                y_tst = y_t[true]
+                y_ht = y_h[true]
+            else:
+                y_tst = y_t
+                y_ht = y_h
 
             for stat in scoreDict:
-                results[var][stat].append(scoreDict[stat](y_t,y_h))
+                results[var][stat].append(scoreDict[stat](y_tst,y_ht))
             
-            results[var]['ytest'].append(y_t)
-            results[var]['yhat'].append(y_h)
+            results[var]['ytest'].append(y_tst)
+            results[var]['yhat'].append(y_ht)
             # results['pred_time'].append(self.pred_time)
             # results['fit_time'].append(self.fit_time)            
         return results

@@ -14,19 +14,19 @@ import warnings
 warnings.filterwarnings("ignore")
 from MLP_cross_val import reg_cross_val
 import features as feats
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 # data
 rrsData = pickle.load( open( "/content/drive/My Drive/sensorIDX_rrs.p", "rb" ) )
 #rrsData = pickle.load( open( "/Users/jakravit/Desktop/npp_projects/ML/sensorIDX_rrs.p", "rb" ) )
 
-train_info = {'epochs':10,
-              'batch_size':512,
+train_info = {'epochs':200,
+              'batch_size':64,
               'lrate':1e-4,
               'split':.2,
               'n_mixes':5,
               'layers':[512,128,64,32],
-              'cv':2,
+              'cv':3,
               }
 
 # get features, outputs
@@ -92,3 +92,8 @@ fname = '/content/drive/My Drive/test_results.p'
 f = open(fname,'wb')
 pickle.dump(results,f)
 f.close() 
+
+#%%
+#test = pickle.load( open( "/Users/jakravit/Desktop/test_results.p", "rb" ) )
+# yh = test['minmax_ag']['ag440']['yhat'][0]
+# yt = test['minmax_ag']['ag440']['ytest'][0]

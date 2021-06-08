@@ -77,7 +77,7 @@ def reg_cross_val(X,y,ti,scores):
         
         y_hat = model.predict(X_test, y_test)
         
-        final = model.evaluate(y_test,y_hat,results,scoreDict) 
+        final = model.evaluate(y_test,y_hat,results,scoreDict,scores) 
         count = count+1
     
     return final
