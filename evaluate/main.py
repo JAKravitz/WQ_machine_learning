@@ -71,14 +71,14 @@ logs = ['tot_log','a_log','phy_log','ag_log','nap_log']
 results = {}
 batch = len(runs['features'].keys()) * len(runs['targets'].keys())
 count = 0
-for f in runs['features']:
+for k in runs['features']:
     for t in runs['targets']:
         
-        #name = '_'.join([f,t])
-        name = f + '_' + t
+        name = '_'.join([k,t])
+        #name = f + '_' + t
         print ('\n##### {} #####\n##### C:{}/{} #####\n'.format(name,count,batch))
         
-        X = runs['features'][f]
+        X = runs['features'][k]
         y = runs['targets'][t]
         if t in logs:
             out = reg_cross_val(X, y, ti=train_info, scores='regLogScore')
