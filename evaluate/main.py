@@ -45,9 +45,9 @@ X,y_nap = feats.getXY(rrsData,sensor,targets)
 
 #%%
 runs = {}
-runs['features'] = {'X': X,
-                    'minmax': pd.DataFrame(feats.minMaxScale(X, (X.min()).min(), (X.max()).max())),
-                    'standard': pd.DataFrame(feats.standardScale(X)),
+runs['features'] = {#'X': X,
+                    #'minmax': pd.DataFrame(feats.minMaxScale(X, (X.min()).min(), (X.max()).max())),
+                    #'standard': pd.DataFrame(feats.standardScale(X)),
                     'maxabs': pd.DataFrame(feats.maxAbs(X)),
                     'robust': pd.DataFrame(feats.robust(X)),
                     'quantile': pd.DataFrame(feats.quantile(X)),
