@@ -74,7 +74,8 @@ count = 0
 for f in runs['features']:
     for t in runs['targets']:
         
-        name = '_'.join([f,t])
+        #name = '_'.join([f,t])
+        name = f + '_' + t
         print ('\n##### {} #####\n##### C:{}/{} #####\n'.format(name,count,batch))
         
         X = runs['features'][f]
