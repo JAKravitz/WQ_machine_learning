@@ -32,38 +32,62 @@ train_info = {'epochs':200,
 # get features, outputs
 atcor = 'rrs'
 sensor = 'hico'
-targets = ['chl','PC','cnap','cdom','aphy440','ag440','anap440','bbphy440','bbnap440']
+
+targets = ['chl','PC','cnap','aphy440','ag440','anap440','bbphy440','bbnap440']
 X,y_tot = feats.getXY(rrsData,sensor,targets)
-targets = ['aphy440','ag440','anap440']
-X,y_a = feats.getXY(rrsData,sensor,targets)
+
+targets = ['aphy440','ag440','anap440','anap440','bbphy440','bbnap440']
+X,y_iop = feats.getXY(rrsData,sensor,targets)
+
+targets = ['chl','PC','cnap']
+X,y_conc = feats.getXY(rrsData,sensor,targets)
+
 targets = ['aphy440']
-X,y_phy = feats.getXY(rrsData,sensor,targets)
+X,y_aphy = feats.getXY(rrsData,sensor,targets)
 targets = ['ag440']
 X,y_ag = feats.getXY(rrsData,sensor,targets)
 targets = ['anap440']
-X,y_nap = feats.getXY(rrsData,sensor,targets)
+X,y_anap = feats.getXY(rrsData,sensor,targets)
+targets = ['bbphy440']
+X,y_bphy = feats.getXY(rrsData,sensor,targets)
+targets = ['bbnap440']
+X,y_bnap = feats.getXY(rrsData,sensor,targets)
+targets = ['chl']
+X,y_chl = feats.getXY(rrsData,sensor,targets)
+targets = ['PC']
+X,y_pc = feats.getXY(rrsData,sensor,targets)
+targets = ['cnap']
+X,y_cnap = feats.getXY(rrsData,sensor,targets)
+
 
 #%%
 runs = {}
-runs['features'] = {#'X': X,
-                    #'minmax': pd.DataFrame(feats.minMaxScale(X, (X.min()).min(), (X.max()).max())),
-                    #'standard': pd.DataFrame(feats.standardScale(X)),
-                    #'maxabs': pd.DataFrame(feats.maxAbs(X)),
-                    #'robust': pd.DataFrame(feats.robust(X)),
-                    #'quantile': pd.DataFrame(feats.quantile(X)),
-                    #'log': np.log(X),
+runs['features'] = {'X': X,
+                    'minmax': pd.DataFrame(feats.minMaxScale(X, (X.min()).min(), (X.max()).max())),
+                    'standard': pd.DataFrame(feats.standardScale(X)),
+                    'maxabs': pd.DataFrame(feats.maxAbs(X)),
+                    'robust': pd.DataFrame(feats.robust(X)),
+                    'quantile': pd.DataFrame(feats.quantile(X)),
+                    'log': np.log(X),
                     'power': pd.DataFrame(feats.power(X)),
                     'norm': pd.DataFrame(feats.l2norm(X))}
 runs['targets'] = {'tot': y_tot,
-                   'a': y_a,
-                   'phy': y_phy,
+                   'iop': y_iop,
+                   'conc':y_conc,
+                   'aphy': y_aphy,
+                   'bphy': y_bphy,
                    'ag': y_ag,
-                   'nap': y_nap,
+                   'anap': y_anap,
+                   'bnap': y_bnap,
                    'tot_log': np.log(y_tot),
-                   'a_log': np.log(y_a),
-                   'phy_log': np.log(y_phy),
+                   'iop_log': np.log(y_iop),
+                   'conc_log': np.log(y_conc),
+                   'aphy_log': np.log(y_aphy),
+                   'bphy_log': np.log(y_bphy),
                    'ag_log': np.log(y_ag),
-                   'nap_log': np.log(y_nap)}
+                   'anap_log': np.log(y_anap),
+                   'bnap_log': np.log(y_bnap),
+                   }
 
 #%% 
 logs = ['tot_log','a_log','phy_log','ag_log','nap_log']
