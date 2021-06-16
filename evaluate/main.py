@@ -92,7 +92,6 @@ runs['targets'] = {'tot': y_tot,
 #%% 
 logs = ['tot_log','a_log','phy_log','ag_log','nap_log']
 
-results = {}
 batch = len(runs['features'].keys()) * len(runs['targets'].keys())
 count = 0
 for k in runs['features']:
@@ -109,13 +108,12 @@ for k in runs['features']:
         else:
             out = reg_cross_val(X, y, ti=train_info, scores='regScore')
         
-        results[name] = out
         count = count+1
 
         # save run to disk
         fname = '/content/drive/My Drive/ML_results/{}.p'.format(name)
         f = open(fname,'wb')
-        pickle.dump(results,f)
+        pickle.dump(out,f)
         f.close() 
 
 #%%
