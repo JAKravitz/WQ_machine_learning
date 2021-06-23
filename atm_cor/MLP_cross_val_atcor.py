@@ -6,7 +6,7 @@ Created on Wed May 19 12:07:14 2021
 @author: jakravit
 """
 #from MDNregressor import MDNregressor
-from evaluate.MLPregressor import MLPregressor
+from atm_cor.MLPregressor_atcor import MLPregressor
 from sklearn.model_selection import KFold
 import evaluate.scorers as sc
 import sklearn.metrics as metrics
@@ -36,8 +36,6 @@ def reg_prep_results(cols):
 def reg_cross_val(X,y,ti,scores):
 
     scoreDict = {
-                'clfScore' : {'Accuracy': metrics.accuracy_score,
-                              'ROC_AUC': metrics.roc_auc_score},        
                 'regScore' : {'R2': sc.r2,
                               'RMSE': sc.rmse,
                               'RMSELE': sc.rmsele,
@@ -77,7 +75,8 @@ def reg_cross_val(X,y,ti,scores):
         
         y_hat = model.predict(X_test, y_test)
         
-        final = model.evaluate(y_test,y_hat,results,scoreDict,scores) 
+        #final = model.evaluate(y_test,y_hat,results,scoreDict,scores) 
         count = count+1
     
-    return final
+    return y_hat
+

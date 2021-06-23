@@ -12,7 +12,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-path = '/Users/jakravit/Desktop/ML_results_v1.p'
+path = '/Users/jakravit/Desktop/hyperspec_pub/ML_results_v1.p'
 data = pickle.load(open(path,'rb'))
 
 phydict = {'X':pd.DataFrame(),
@@ -30,7 +30,7 @@ abv = {'phy':'aphy440',
        'ag':'ag440',
        'nap':'anap440'}
 
-p = 'phy'
+p = 'nap'
 for k in data:
     results = data[k]
     run = k.split('_')
@@ -54,9 +54,10 @@ axs = axs.ravel()
 count = 0
 for transform in phydict:
     phydict[transform].mean().plot.bar(ax=axs[count],yerr=phydict[transform].std(),legend=False, width=.7)
-    axs[count].set_ylim(0,60)
+    axs[count].set_ylim(0,100)
     axs[count].set_title(transform)
     count = count+1
 axs[3].set_ylabel('MAPE (%)')
 plt.subplots_adjust(wspace=.05)
-fig.savefig('/Users/jakravit/Desktop/ML_results_v1_plot.png',bbox_inches='tight',dpi=300)
+fig.savefig('/Users/jakravit/Desktop/ML_results_v1_{}_plot.png'.format(p),
+            bbox_inches='tight',dpi=300)

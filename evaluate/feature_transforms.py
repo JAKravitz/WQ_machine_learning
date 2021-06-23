@@ -12,8 +12,8 @@ import numpy as np
 # from classifier_eval import classifier
 import warnings
 warnings.filterwarnings("ignore")
-from MLP_cross_val import reg_cross_val
-import features as feats
+from evaluate.MLP_cross_val import reg_cross_val
+import evaluate.features as feats
 #import matplotlib.pyplot as plt
 
 # data
@@ -36,7 +36,7 @@ sensor = 'hico'
 targets = ['chl','PC','cnap','aphy440','ag440','anap440','bbphy440','bbnap440']
 X,y_tot = feats.getXY(rrsData,sensor,targets)
 
-targets = ['aphy440','ag440','anap440','anap440','bbphy440','bbnap440']
+targets = ['aphy440','ag440','anap440','bbphy440','bbnap440']
 X,y_iop = feats.getXY(rrsData,sensor,targets)
 
 targets = ['chl','PC','cnap']
