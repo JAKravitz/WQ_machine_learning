@@ -14,17 +14,15 @@ import sklearn.metrics as metrics
 
 def reg_prep_results(cols):
     results = {}
-    for var in cols:
-        if var == 'cluster':
-            continue
-        results[var] = {'ytest': [],
-                        'yhat': [],
-                        'R2': [],
-                        'RMSE': [],
-                        'RMSELE': [],
-                        'Bias': [],
-                        'MAPE': [],
-                        'rRMSE': []}
+    for k in cols:
+        results[k] = {'ytest': [],
+                      'yhat': [],
+                      'R2': [],
+                      'RMSE': [],
+                      'RMSELE': [],
+                      'Bias': [],
+                      'MAPE': [],
+                      'rRMSE': []}
         results['fit_time'] = []
         results['pred_time'] = []
         results['train_loss'] = []
@@ -51,7 +49,7 @@ def reg_cross_val(X,y,ti,scores):
                 }
     
     scoreDict = scoreDict[scores]
-    results = reg_prep_results(y.columns)
+    results = reg_prep_results(range(y.shape[1]))
     
     kfold = KFold(n_splits=3, shuffle=True)
     count = 0
