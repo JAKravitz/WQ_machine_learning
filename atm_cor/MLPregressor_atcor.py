@@ -65,19 +65,19 @@ class MLPregressor(BaseEstimator):
             y_t = y_test[:,band].astype(float)
             y_h = y_hat[:,band].astype(float)
             
-            if scores in ['regScore']:
-                true = np.logical_and(y_h > 0, y_t > 0)
-                y_tst = y_t[true]
-                y_ht = y_h[true]
-            else:
-                y_tst = y_t
-                y_ht = y_h
+            # if scores in ['regScore']:
+            #     true = np.logical_and(y_h > 0, y_t > 0)
+            #     y_tst = y_t[true]
+            #     y_ht = y_h[true]
+            # else:
+            #     y_tst = y_t
+            #     y_ht = y_h
 
             for stat in scoreDict:
-                results[band][stat].append(scoreDict[stat](y_tst,y_ht))
+                results[band][stat].append(scoreDict[stat](y_t,y_h))
             
-            results[band]['ytest'].append(y_tst)
-            results[band]['yhat'].append(y_ht)
+            results[band]['ytest'].append(y_t)
+            results[band]['yhat'].append(y_h)
             results['pred_time'].append(self.pred_time)
             results['fit_time'].append(self.fit_time)            
         return results
