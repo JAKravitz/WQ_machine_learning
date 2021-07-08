@@ -53,13 +53,13 @@ def reg_cross_val(X,y,ti,scores):
     scoreDict = scoreDict[scores]
     results = reg_prep_results(y.columns)
     
-    kfold = KFold(n_splits=ti['cv'], shuffle=True)
+    kfold = KFold(n_splits=3, shuffle=True)
     count = 0
     for train, test in kfold.split(X, y):
         
         print ('FOLD = {}...'.format(count))
-        X_train, X_test = X.iloc[train,:], X.iloc[test,:]
-        y_train, y_test = y.iloc[train,:], y.iloc[test,:]   
+        X_train, X_test = X[train,:], X[test,:]
+        y_train, y_test = y[train,:], y[test,:]   
         
         n_in = X_train.shape[1]
         n_out = y_train.shape[1]
@@ -75,8 +75,8 @@ def reg_cross_val(X,y,ti,scores):
         
         y_hat = model.predict(X_test, y_test)
         
-        #final = model.evaluate(y_test,y_hat,results,scoreDict,scores) 
+        final = model.evaluate(y_test,y_hat,results,scoreDict,scores) 
         count = count+1
     
-    return y_hat
+    return final
 

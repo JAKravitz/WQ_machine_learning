@@ -53,18 +53,17 @@ class MLPregressor(BaseEstimator):
     
     def predict(self, Xt, yt):
         tic = timeit.default_timer()
-        y_hat =  pd.DataFrame(self.model.predict(Xt),index=yt.index.values,columns=yt.columns)
+        #y_hat =  pd.DataFrame(self.model.predict(Xt),index=yt.index.values,columns=yt.columns)
+        y_hat = self.model.predict(Xt)
         toc = timeit.default_timer()
         self.pred_time = toc-tic 
         return y_hat
     
     def evaluate(self,y_hat,y_test,results,scoreDict,scores):
-        for var in y_test.columns:
-            if var in ['adj','cluster','admix']:
-                continue
-            #print (var)
-            y_t = y_test.loc[:,var].astype(float)
-            y_h = y_hat.loc[:,var].astype(float)
+        for band in range(y_test.shape[1]):
+
+            y_t = y_test[:,band].astype(float)
+            y_h = y_hat[:,band].astype(float)
             
             if scores in ['regScore']:
                 true = np.logical_and(y_h > 0, y_t > 0)
@@ -75,12 +74,12 @@ class MLPregressor(BaseEstimator):
                 y_ht = y_h
 
             for stat in scoreDict:
-                results[var][stat].append(scoreDict[stat](y_tst,y_ht))
+                results[band][stat].append(scoreDict[stat](y_tst,y_ht))
             
-            results[var]['ytest'].append(y_tst)
-            results[var]['yhat'].append(y_ht)
-            # results['pred_time'].append(self.pred_time)
-            # results['fit_time'].append(self.fit_time)            
+            results[band]['ytest'].append(y_tst)
+            results[band]['yhat'].append(y_ht)
+            results['pred_time'].append(self.pred_time)
+            results['fit_time'].append(self.fit_time)            
         return results
     
     
