@@ -98,10 +98,10 @@ ypca20, ycomp20, yvar20 = nPCA(yTClean,20)
 
 #%%
 runs = {}
-runs['features'] = {'XmetaT': XmetaTClean,
+runs['features'] = {'XmetaT': XmetaTClean.values,
                     'XmetaTpca10': Xpca10,
                     'XmetaTpca20': Xpca20}
-runs['targets'] = {'yT': yTClean,
+runs['targets'] = {'yT': yTClean.values,
                    'yTpca10': ypca10,
                    'ytpca20': ypca20}
 
