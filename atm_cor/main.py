@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from scipy.interpolate import BSpline, LSQUnivariateSpline, UnivariateSpline
 import warnings
 warnings.filterwarnings("ignore")
-from atm_cor.MLP_cross_val_atcor import reg_cross_val
+from MLP_cross_val_atcor import reg_cross_val
 from sklearn.model_selection import train_test_split
 
 def clean(data):   
