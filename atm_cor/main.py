@@ -101,7 +101,7 @@ runs = {}
 runs['features'] = {'XmetaT': XmetaTClean,
                     'XmetaTpca10': Xpca10,
                     'XmetaTpca20': Xpca20}
-runs['targets'] = {'yT': yT,
+runs['targets'] = {'yT': yTClean,
                    'yTpca10': ypca10,
                    'ytpca20': ypca20}
 
