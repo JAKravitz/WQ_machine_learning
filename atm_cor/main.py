@@ -106,10 +106,10 @@ runs['targets'] = {'yT': yT,
                    'ytpca20': ypca20}
 
 #%%
-from atm_cor.MLPregressor_atcor import MLPregressor
+#from atm_cor.MLPregressor_atcor import MLPregressor
 
-ti = {'epochs':50,
-      'batch_size':128,
+ti = {'epochs':25,
+      'batch_size':256,
       'lrate':1e-4,
       'split':.2,
       'n_mixes':5,
