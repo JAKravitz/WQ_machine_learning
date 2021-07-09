@@ -30,7 +30,7 @@ for run in run_info.index:
 
     batch_info = {
                   'sensor':'hico',
-                  'epochs':100,
+                  'epochs':50,
                   'batch_size':32,
                   'lrate':.0001,
                   'split':.2,
