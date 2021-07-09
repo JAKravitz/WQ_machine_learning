@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 import warnings
 warnings.filterwarnings("ignore")
-from atm_cor_v2.MLP_atcor import MLPregressor
+from MLP_atcor import MLPregressor
 from sklearn.model_selection import KFold
 
 # data
