@@ -31,8 +31,8 @@ for run in run_info.index:
     batch_info = {
                   'sensor':'hico',
                   'epochs':100,
-                  'batch_size':64,
-                  'lrate':.0001,
+                  'batch_size':32,
+                  'lrate':.005,
                   'split':.2,
                   'layers':[100,100,100,100,100],
                   'cv':5,
