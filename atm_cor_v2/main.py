@@ -58,10 +58,10 @@ for run in run_info.index:
         history = batch.fit(X_train,y_train)
         results['train_loss'].append(history.history['loss'])
         results['val_loss'].append(history.history['val_loss'])
-        y_hatTpca = batch.predict(X_test,)
+        y_hat = batch.predict(X_test,)
         if batch_info['ypca']:
             # y_hat
-            y_hatT = batch.nPCA_revert(y_hatTpca)
+            y_hatT = batch.nPCA_revert(y_hat)
             y_hat = batch.transform_inverse(y_hatT)
             # y_test
             y_testT = batch.nPCA_revert(y_test)
