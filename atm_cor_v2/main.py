@@ -10,17 +10,17 @@ import pandas as pd
 import numpy as np
 import warnings
 warnings.filterwarnings("ignore")
-from MLP_atcor import MLPregressor
+from atm_cor_v2.MLP_atcor import MLPregressor
 from sklearn.model_selection import KFold
 
 # data
-rrsData = pickle.load( open( "/content/drive/My Drive/nasa_npp/RT/sensorIDX_rrs.p", "rb" ) )
-refData = pickle.load( open( "/content/drive/My Drive/nasa_npp/RT/sensorIDX_ref.p", "rb" ) )
-# rrsData = pickle.load( open( "/Users/jakravit/Desktop/nasa_npp/RT/sensorIDX_rrs.p", "rb" ) )
-# refData = pickle.load( open( "/Users/jakravit/Desktop/nasa_npp/RT/sensorIDX_ref.p", "rb" ) )
+# rrsData = pickle.load( open( "/content/drive/My Drive/nasa_npp/RT/sensorIDX_rrs.p", "rb" ) )
+# refData = pickle.load( open( "/content/drive/My Drive/nasa_npp/RT/sensorIDX_ref.p", "rb" ) )
+rrsData = pickle.load( open( "/Users/jakravit/Desktop/nasa_npp/RT/sensorIDX_rrs.p", "rb" ) )
+refData = pickle.load( open( "/Users/jakravit/Desktop/nasa_npp/RT/sensorIDX_ref.p", "rb" ) )
 
-run_info = pd.read_csv('/content/hyperspec_DL/atm_cor_v2/run_info.csv',index_col='batch_id')
-# run_info = pd.read_csv('/Users/jakravit/git/hyperspec_DL/atm_cor_v2/run_info.csv', index_col='batch_id')
+#run_info = pd.read_csv('/content/hyperspec_DL/atm_cor_v2/run_info.csv',index_col='batch_id')
+run_info = pd.read_csv('/Users/jakravit/git/hyperspec_DL/atm_cor_v2/run_info.csv', index_col='batch_id')
 
 for run in run_info.index:
 
@@ -31,7 +31,7 @@ for run in run_info.index:
                   'lrate':1e-4,
                   'split':.2,
                   'layers':[512,256,128,64],
-                  'cv':2,
+                  'cv':3,
                   'meta': run_info.loc[run,'meta'],
                   'Xtransform': run_info.loc[run,'Xtransform'],
                   'Xpca': run_info.loc[run,'Xpca'],
@@ -53,8 +53,8 @@ for run in run_info.index:
     count = 0
     for train, test in kfold.split(X, y):
         print ('FOLD = {}...'.format(count))
-        X_train, X_test = X[train,:], X[test,:]
-        y_train, y_test = y[train,:], y[test,:] 
+        X_train, X_test = X.iloc[train,:], X.iloc[test,:]
+        y_train, y_test = y.iloc[train,:], y.iloc[test,:] 
         history = batch.fit(X_train,y_train)
         results['train_loss'].append(history.history['loss'])
         results['val_loss'].append(history.history['val_loss'])
