@@ -10,17 +10,20 @@ import pandas as pd
 import numpy as np
 import warnings
 warnings.filterwarnings("ignore")
-from MLP_atcor import MLPregressor
+try:
+    from MLP_atcor import MLPregressor
+except:
+    from atm_cor_v2.MLP_atcor import MLPregressor
 from sklearn.model_selection import KFold
 
 # data
-rrsData = pickle.load( open( "/content/drive/My Drive/nasa_npp/RT/sensorIDX_rrs.p", "rb" ) )
-refData = pickle.load( open( "/content/drive/My Drive/nasa_npp/RT/sensorIDX_ref.p", "rb" ) )
-# rrsData = pickle.load( open( "/Users/jakravit/Desktop/nasa_npp/RT/sensorIDX_rrs.p", "rb" ) )
-# refData = pickle.load( open( "/Users/jakravit/Desktop/nasa_npp/RT/sensorIDX_ref.p", "rb" ) )
+# rrsData = pickle.load( open( "/content/drive/My Drive/nasa_npp/RT/sensorIDX_rrs.p", "rb" ) )
+# refData = pickle.load( open( "/content/drive/My Drive/nasa_npp/RT/sensorIDX_ref.p", "rb" ) )
+rrsData = pickle.load( open( "/Users/jakravit/Desktop/nasa_npp/RT/sensorIDX_rrs.p", "rb" ) )
+refData = pickle.load( open( "/Users/jakravit/Desktop/nasa_npp/RT/sensorIDX_ref.p", "rb" ) )
 
-run_info = pd.read_csv('/content/hyperspec_DL/atm_cor_v2/run_info.csv',index_col='batch_id')
-# run_info = pd.read_csv('/Users/jakravit/git/hyperspec_DL/atm_cor_v2/run_info.csv', index_col='batch_id')
+# run_info = pd.read_csv('/content/hyperspec_DL/atm_cor_v2/run_info.csv',index_col='batch_id')
+run_info = pd.read_csv('/Users/jakravit/git/hyperspec_DL/atm_cor_v2/run_info.csv', index_col='batch_id')
 
 for run in run_info.index:
 
@@ -65,7 +68,11 @@ for run in run_info.index:
             y_hat = batch.transform_inverse(y_hatT)
             # y_test
             y_testT = batch.nPCA_revert(y_test)
-            y_test = batch.transform_inverse(y_testT)            
+            y_test = batch.transform_inverse(y_testT)  
+        else:
+            y_hat = batch.transform_inverse(y_hat)
+            y_test = batch.transform_inverse(y_test)
+            
         final = batch.evaluate(y_test,y_hat,results) 
         count = count+1   
     
