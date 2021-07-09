@@ -27,9 +27,9 @@ class MLPregressor(BaseEstimator):
         self.layers = batch_info['layers']
         self.meta = batch_info['meta']
         self.Xtrans = batch_info['Xtransform']
-        self.Xpca = int(batch_info['Xpca'])
+        self.Xpca = batch_info['Xpca']
         self.ytrans = batch_info['ytransform']
-        self.ypca = int(batch_info['ypca'])
+        self.ypca = batch_info['ypca']
     
     def clean(self,data):   
         # data.fillna(0,inplace=True)
@@ -78,7 +78,7 @@ class MLPregressor(BaseEstimator):
             self.keep = Xt.index
         if self.Xpca:
             # requires transform
-            Xt, self.Xcomp, self.Xvar = self.nPCA(Xt.values, self.Xpca)
+            Xt, self.Xcomp, self.Xvar = self.nPCA(Xt.values, int(self.Xpca))
             Xt = pd.DataFrame(Xt)
         self.n_in = Xt.shape[1]
         self.X = X
@@ -94,7 +94,7 @@ class MLPregressor(BaseEstimator):
             yt = yt.loc[self.keep,:]
         if self.ypca:
             # requires transfrom
-            yt, self.ycomp, self.yvar = self.nPCA(yt.values, self.ypca)
+            yt, self.ycomp, self.yvar = self.nPCA(yt.values, int(self.ypca))
             yt = pd.DataFrame(yt)
         self.n_out = yt.shape[1]
         self.y = y
