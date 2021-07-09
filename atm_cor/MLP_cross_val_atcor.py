@@ -31,7 +31,7 @@ def reg_prep_results(cols):
     return results
         
 
-def reg_cross_val(X,y,ti,scores):
+def reg_cross_val(run_info):
 
     scoreDict = {
                 'regScore' : {'R2': sc.r2,
@@ -48,7 +48,11 @@ def reg_cross_val(X,y,ti,scores):
                                  'rRMSE': sc.log_rrmse,}
                 }
     
-    scoreDict = scoreDict[scores]
+    X = run_info['X']
+    y = run_info['y']
+    ti = run_info['train_params']
+    
+    scoreDict = scoreDict[run_info['scores']]
     results = reg_prep_results(range(y.shape[1]))
     
     kfold = KFold(n_splits=3, shuffle=True)
@@ -73,8 +77,17 @@ def reg_cross_val(X,y,ti,scores):
         
         y_hat = model.predict(X_test, y_test)
         
-        final = model.evaluate(y_test,y_hat,results,scoreDict,scores) 
+        
+        final = model.evaluate(y_test,y_hat,results,scoreDict) 
         count = count+1
     
     return final
+
+#%%
+
+
+
+
+
+
 

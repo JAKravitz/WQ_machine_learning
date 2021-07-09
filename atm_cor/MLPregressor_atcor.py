@@ -25,7 +25,8 @@ class MLPregressor(BaseEstimator):
         self.batch_size = batch_size
         self.lrate = lrate
         self.split = split
-        
+    
+    
     def build(self, layers,):
         self.model = Sequential(
                 [Dense(layers[0], use_bias=False, input_shape=(self.n_in,)), BatchNormalization(), ReLU(),Dropout(0.1),
@@ -59,7 +60,7 @@ class MLPregressor(BaseEstimator):
         self.pred_time = toc-tic 
         return y_hat
     
-    def evaluate(self,y_hat,y_test,results,scoreDict,scores):
+    def evaluate(self,y_hat,y_test,results,scoreDict):
         for band in range(y_test.shape[1]):
 
             y_t = y_test[:,band].astype(float)

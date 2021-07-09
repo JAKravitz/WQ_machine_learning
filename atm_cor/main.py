@@ -129,7 +129,14 @@ for k in runs['features']:
         X = runs['features'][k]
         y = runs['targets'][t]
         
-        out = reg_cross_val(X, y, ti=ti, scores='regScore')
+        run_info = {'X':X,
+                    'y':y,
+                    'train_params':ti,
+                    'scores':'regScore',
+                    'features': k,
+                    'targets': t}
+        
+        out = reg_cross_val(run_info)
 
         count = count+1
 

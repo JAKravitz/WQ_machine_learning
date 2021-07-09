@@ -1,0 +1,5 @@
+﻿batch_id,name,meta,Xtransform,Xpca,ytransform,ypca
+1,XmetaT_yT,TRUE,TRUE,None,TRUE,None
+2,XmetaTpca10_yTpca10,TRUE,TRUE,10,TRUE,10
+3,XmetaTpca20_yTpca20,TRUE,TRUE,20,TRUE,20
+4,XmetaTpca20_yT,TRUE,TRUE,20,TRUE,None
