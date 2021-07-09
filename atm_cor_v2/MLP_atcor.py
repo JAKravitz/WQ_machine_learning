@@ -103,10 +103,11 @@ class MLPregressor(BaseEstimator):
     def build(self):
         
         self.model = Sequential(
-                [Dense(self.layers[0], use_bias=False, input_shape=(self.n_in,)), BatchNormalization(), ReLU(),Dropout(0.1),
-                 Dense(self.layers[1], use_bias=False), BatchNormalization(), ReLU(), Dropout(0.1),
-                 Dense(self.layers[2], use_bias=False), BatchNormalization(), ReLU(), Dropout(0.1), 
-                 Dense(self.layers[3], use_bias=False), BatchNormalization(), ReLU(), Dropout(0.1),
+                [Dense(self.layers[0], use_bias=False, input_shape=(self.n_in,)), ReLU(),Dropout(0.1),
+                 Dense(self.layers[1], use_bias=False), ReLU(), Dropout(0.1),
+                 Dense(self.layers[2], use_bias=False), ReLU(), Dropout(0.1), 
+                 Dense(self.layers[3], use_bias=False), ReLU(), Dropout(0.1),
+                 Dense(self.layers[4], use_bias=False), ReLU(), Dropout(0.1),
                  Dense(self.n_out)
                  ])
         # compile
