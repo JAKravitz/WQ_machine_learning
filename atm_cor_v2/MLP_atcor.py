@@ -20,8 +20,6 @@ class MLPregressor(BaseEstimator):
     
     def __init__(self, batch_info):
         self.sensor = batch_info['sensor']
-        self.rrs = batch_info['rrsData']
-        self.ref = batch_info['refData']
         self.epochs = batch_info['epochs']
         self.batch_size = batch_info['batch_size']
         self.lrate = batch_info['lrate']
