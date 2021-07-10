@@ -185,7 +185,7 @@ class MLPregressor(BaseEstimator):
                      'MAPE': sc.mape,
                      'rRMSE': sc.rrmse,}
         
-        y_hat = pd.DataFrame(y_test,columns=y_test.columns)
+        y_hat = pd.DataFrame(y_hat,columns=y_test.columns)
         
         for band in y_test.columns:
 

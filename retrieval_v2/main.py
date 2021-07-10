@@ -58,7 +58,7 @@ for meta in [True,False]:
             results['train_loss'].append(history.history['loss'])
             results['val_loss'].append(history.history['val_loss'])
             y_hat = model.predict(X_test)
-            results = model.evaluate(y_hat,y_test,results) 
+            results = model.evaluate(y_hat,np.exp(y_test),results) 
             count = count+1 
         results['batch_info'] = batch_info
         # save run to disk
