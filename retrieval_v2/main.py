@@ -27,7 +27,7 @@ for meta in [True,False]:
 
         batch_info = {
                       'sensor':'hico',
-                      'epochs':50,
+                      'epochs':100,
                       'batch_size':32,
                       'lrate':.0001,
                       'split':.2,
