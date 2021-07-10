@@ -108,6 +108,11 @@ class MLPregressor(BaseEstimator):
                  Dense(self.layers[2], use_bias=False), ReLU(), Dropout(0.1), 
                  Dense(self.layers[3], use_bias=False), ReLU(), Dropout(0.1),
                  Dense(self.layers[4], use_bias=False), ReLU(), Dropout(0.1),
+                 Dense(self.layers[5], use_bias=False), ReLU(), Dropout(0.1),
+                 Dense(self.layers[6], use_bias=False), ReLU(), Dropout(0.1), 
+                 Dense(self.layers[7], use_bias=False), ReLU(), Dropout(0.1),
+                 Dense(self.layers[8], use_bias=False), ReLU(), Dropout(0.1),
+                 Dense(self.layers[9], use_bias=False), ReLU(), Dropout(0.1),
                  Dense(self.n_out)
                  ])
         # compile

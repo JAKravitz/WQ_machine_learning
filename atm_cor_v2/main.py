@@ -31,10 +31,10 @@ for run in run_info.index:
     batch_info = {
                   'sensor':'hico',
                   'epochs':50,
-                  'batch_size':32,
+                  'batch_size':16,
                   'lrate':.0001,
                   'split':.2,
-                  'layers':[500,300,200,150,100],
+                  'layers':[100,100,100,100,100,100,100,100,100,100],
                   'cv':5,
                   'meta': run_info.loc[run,'meta'],
                   'Xtransform': run_info.loc[run,'Xtransform'],
