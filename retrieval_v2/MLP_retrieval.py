@@ -125,19 +125,9 @@ class MLPregressor(BaseEstimator):
                 
     def build(self,Xdims,ydims):
         
-        if Xdims[1] == 10:
-            nin = Xdims[1]+1
-            nhid = 10
-        elif Xdims[1] == 20:
-            nin = Xdims[1]+1
-            nhid = 13
-        else:
-            nin = Xdims[1]+1
-            nhid = round(Xdims[1]*.6)
-        
         self.model = Sequential(
-                [Dense(nin, use_bias=False, input_shape=(self.n_in)), ReLU(),Dropout(0.1),
-                 Dense(nhid, use_bias=False), ReLU(), Dropout(0.1),
+                [Dense(self.n_in+1, use_bias=False, input_shape=(self.n_in)), ReLU(),Dropout(0.1),
+                 Dense(10, use_bias=False), ReLU(), Dropout(0.1),
                  Dense(self.n_out)
                  ])
         # compile
