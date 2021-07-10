@@ -46,9 +46,7 @@ for meta in [True,False]:
     
         model = MLPregressor(batch_info)
         X,y = model.getXY(refData)
-        Xdims = X.shape
-        ydims = y.shape
-        model.build(Xdims,ydims)
+        model.build()
         results = model.prep_results(y)
         kfold = KFold(n_splits=batch_info['cv'], shuffle=True)
         count = 0

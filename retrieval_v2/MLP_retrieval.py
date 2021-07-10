@@ -123,7 +123,7 @@ class MLPregressor(BaseEstimator):
         
         return Xt, y
                 
-    def build(self,Xdims,ydims):
+    def build(self):
         
         self.model = Sequential(
                 [Dense(self.n_in+1, use_bias=False, input_shape=(self.n_in)), ReLU(),Dropout(0.1),
