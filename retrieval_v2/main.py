@@ -28,10 +28,10 @@ for meta in [True,False]:
         batch_info = {
                       'sensor':'hico',
                       'epochs':25,
-                      'batch_size':128,
+                      'batch_size':16,
                       'lrate':.0001,
                       'split':.2,
-                      'layers':[100,100,100,100,100,100,100,100,100,100],
+                      'layers':[],
                       'targets': ['chl','PC','fl_amp','aphy440','ag440','anap440','bbphy440','bbnap440'],
                       'cv':5,
                       'meta': meta, #run_info.loc[run,'meta'],
@@ -46,7 +46,9 @@ for meta in [True,False]:
     
         model = MLPregressor(batch_info)
         X,y = model.getXY(refData)
-        model.build()
+        Xdims = X.shape
+        ydims = y.shape
+        model.build(Xdims,ydims)
         results = model.prep_results(y)
         kfold = KFold(n_splits=batch_info['cv'], shuffle=True)
         count = 0
