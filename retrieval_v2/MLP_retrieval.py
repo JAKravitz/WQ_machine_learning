@@ -126,7 +126,7 @@ class MLPregressor(BaseEstimator):
     def build(self):
         
         self.model = Sequential(
-                [Dense(self.n_in+1, use_bias=False, input_shape=(self.n_in)), ReLU(),Dropout(0.1),
+                [Dense(self.n_in+1, use_bias=False, input_shape=(self.n_in,)), ReLU(),Dropout(0.1),
                  Dense(10, use_bias=False), ReLU(), Dropout(0.1),
                  Dense(self.n_out)
                  ])
