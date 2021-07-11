@@ -124,17 +124,17 @@ class MLPregressor(BaseEstimator):
                 
     def build(self):
         
-        # if self.n_in in [10,20]:
-        #     nhid = 10
-        #     nhid2 = 10
-        # else:
-        #     nhid = 60
-        #     nhid2 = 35
+        if self.n_in in [10,20]:
+            nhid = 10
+            nhid2 = 10
+        else:
+            nhid = 60
+            nhid2 = 35
         
         self.model = Sequential(
-                [Dense(300, use_bias=False, input_shape=(self.n_in,)), ReLU(),Dropout(0.1),
-                 Dense(100, use_bias=False), ReLU(), Dropout(0.1),
-                 Dense(50, use_bias=False), ReLU(), Dropout(0.1),
+                [Dense(self.n_in+1, use_bias=False, input_shape=(self.n_in,)), ReLU(),Dropout(0.1),
+                 Dense(nhid, use_bias=False), ReLU(), Dropout(0.1),
+                 Dense(nhid2, use_bias=False), ReLU(), Dropout(0.1),
                  Dense(self.n_out)
                  ])
         # compile
