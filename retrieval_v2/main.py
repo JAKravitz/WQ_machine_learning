@@ -27,12 +27,12 @@ for meta in [True,False]:
 
         batch_info = {
                       'sensor':'hico',
-                      'epochs':100,
+                      'epochs':200,
                       'batch_size':64,
                       'lrate':.0001,
                       'split':.2,
                       'layers':[],
-                      'targets': ['chl'],#,'PC','fl_amp','aphy440','ag440','anap440','bbphy440','bbnap440'],
+                      'targets': ['chl','PC','fl_amp','aphy440','ag440','anap440','bbphy440','bbnap440'],
                       'cv':5,
                       'meta': meta, #run_info.loc[run,'meta'],
                       'Xpca': n # run_info.loc[run,'Xpca'],}
@@ -46,12 +46,12 @@ for meta in [True,False]:
     
         model = MLPregressor(batch_info)
         X,y = model.getXY(refData)
-        model.build()
         results = model.prep_results(y)
         kfold = KFold(n_splits=batch_info['cv'], shuffle=True)
         count = 0
         for train, test in kfold.split(X, y):
             print ('FOLD = {}...'.format(count))
+            model.build()
             X_train, X_test = X.iloc[train,:], X.iloc[test,:]
             y_train, y_test = y.iloc[train,:], y.iloc[test,:] 
             history = model.fit(X_train,y_train)
