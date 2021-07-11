@@ -145,14 +145,22 @@ class MLPregressor(BaseEstimator):
     def prep_results(self,y):
         results = {}
         for k in y.columns:
-            results[k] = {'ytest': [],
-                          'yhat': [],
-                          'R2': [],
-                          'RMSE': [],
-                          'RMSELE': [],
-                          'Bias': [],
-                          'MAPE': [],
-                          'rRMSE': []}
+            results[k] = {'cv' : {'ytest': [],
+                                  'yhat': [],
+                                  'R2': [],
+                                  'RMSE': [],
+                                  'RMSELE': [],
+                                  'Bias': [],
+                                  'MAPE': [],
+                                  'rRMSE': []
+                                  },
+                          'final' : {'ytest': [],
+                                      'yhat': [],
+                                      'RMSE': [],
+                                      'RMSELE': [],
+                                      'Bias': [],
+                                      'MAPE': [],
+                                      'rRMSE': []}}
             results['fit_time'] = []
             results['pred_time'] = []
             results['train_loss'] = []
@@ -178,7 +186,7 @@ class MLPregressor(BaseEstimator):
         self.pred_time = toc-tic 
         return np.exp(y_hat)
 
-    def evaluate(self,y_hat,y_test,results):
+    def evaluate(self,y_hat,y_test,results,q):
         import scorers as sc
         scoreDict = {'R2': sc.r2,
                      'RMSE': sc.rmse,
@@ -188,7 +196,7 @@ class MLPregressor(BaseEstimator):
                      'rRMSE': sc.rrmse,}
         
         y_hat = pd.DataFrame(y_hat,columns=y_test.columns)
-        
+    
         for band in y_test.columns:
 
             y_t = y_test.loc[:,band].astype(float)
@@ -203,10 +211,10 @@ class MLPregressor(BaseEstimator):
             #     y_ht = y_h
 
             for stat in scoreDict:
-                results[band][stat].append(scoreDict[stat](y_t,y_h))
+                results[band][q][stat].append(scoreDict[stat](y_t,y_h))
             
-            results[band]['ytest'].append(y_t)
-            results[band]['yhat'].append(y_h)
+            results[band][q]['ytest'].append(y_t)
+            results[band][q]['yhat'].append(y_h)
             results['pred_time'].append(self.pred_time)
             results['fit_time'].append(self.fit_time)            
         return results

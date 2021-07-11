@@ -23,18 +23,19 @@ try:
 except:
     refData = pickle.load( open( "/Users/jakravit/Desktop/nasa_npp/RT/sensorIDX_ref.p", "rb" ) )
 
-cv = 3
 case = 1
 for meta in [True,False]:
     for n in [None,10,20]:
 
         batch_info = {
                       'sensor':'hico',
-                      'epochs':150,
+                      'epochs':200,
                       'batch_size':64,
                       'lrate':.0001,
                       'split':.2,
+                      'layers':[],
                       'targets': ['chl','PC','fl_amp','aphy440','ag440','anap440','bbphy440','bbnap440'],
+                      'cv':3,
                       'meta': meta, #run_info.loc[run,'meta'],
                       'Xpca': n # run_info.loc[run,'Xpca'],}
                       }
@@ -48,17 +49,22 @@ for meta in [True,False]:
         model = MLPregressor(batch_info)
         X,y = model.getXY(refData)
         results = model.prep_results(y)
-        for k in range(cv):
-            print ('FOLD = {}...'.format(k))
-            X = shuffle(X)
-            y = shuffle(y)
-            X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2)
+        X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2)
+        kfold = KFold(n_splits=batch_info['cv'], shuffle=True)
+        count = 0
+        for train, test in kfold.split(X_train, y_train):
+            print ('FOLD = {}...'.format(count))
             model.build()
-            history = model.fit(X_train,y_train)
+            X_tn, X_tt = X_train.iloc[train,:], X_train.iloc[test,:]
+            y_tn, y_tt = y_train.iloc[train,:], y_train.iloc[test,:] 
+            history = model.fit(X_tn,y_tn)
             results['train_loss'].append(history.history['loss'])
             results['val_loss'].append(history.history['val_loss'])
-            y_hat = model.predict(X_test)
-            results = model.evaluate(y_hat,np.exp(y_test),results) 
+            y_ht = model.predict(X_tt)
+            results = model.evaluate(y_ht,np.exp(y_tt),results,'cv') 
+            count = count+1
+        y_hat = model.predict(X_test)
+        results = model.evaluate(y_hat,np.exp(y_test),results,'final') 
         results['batch_info'] = batch_info
         # save run to disk
         fname = '/content/drive/My Drive/retrieval_results_v2/case_{}.p'.format(case)
