@@ -68,4 +68,16 @@ for meta in [True,False]:
         f.close() 
         case = case+1
         
-            
+#%%
+import pickle
+import matplotlib.pyplot as plt
+
+data = pickle.load( open( "/Users/jkravz311/GoogleDrive/retrieval_results_v2/case_1.p", "rb" ) )
+fig, ax = plt.subplots()
+ax.scatter(data['chl']['ytest'][0],data['chl']['yhat'][0],s=.1,c='b')
+ax.scatter(data['chl']['ytest'][1],data['chl']['yhat'][1],s=.1,c='r')
+ax.set_xscale('log')
+ax.set_yscale('log')
+ax.set_xlim(0,2000)
+ax.set_ylim(0,2000)
+
