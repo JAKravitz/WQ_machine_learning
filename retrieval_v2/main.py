@@ -32,7 +32,7 @@ for meta in [True,False]:
                       'lrate':.0001,
                       'split':.2,
                       'layers':[],
-                      'targets': ['chl','PC','fl_amp','aphy440','ag440','anap440','bbphy440','bbnap440'],
+                      'targets': ['chl'],#,'PC','fl_amp','aphy440','ag440','anap440','bbphy440','bbnap440'],
                       'cv':5,
                       'meta': meta, #run_info.loc[run,'meta'],
                       'Xpca': n # run_info.loc[run,'Xpca'],}
