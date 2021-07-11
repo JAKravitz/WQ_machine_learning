@@ -156,6 +156,7 @@ class MLPregressor(BaseEstimator):
                                   },
                           'final' : {'ytest': [],
                                       'yhat': [],
+                                      'R2': [],
                                       'RMSE': [],
                                       'RMSELE': [],
                                       'Bias': [],
