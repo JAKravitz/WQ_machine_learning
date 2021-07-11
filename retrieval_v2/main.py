@@ -10,7 +10,9 @@ import pandas as pd
 import numpy as np
 import warnings
 warnings.filterwarnings("ignore")
+from sklearn.utils import shuffle
 from sklearn.model_selection import KFold
+from sklearn.model_selection import train_test_split
 try:
     from MLP_retrieval import MLPregressor
 except:
@@ -21,19 +23,18 @@ try:
 except:
     refData = pickle.load( open( "/Users/jakravit/Desktop/nasa_npp/RT/sensorIDX_ref.p", "rb" ) )
 
+cv = 3
 case = 1
 for meta in [True,False]:
     for n in [None,10,20]:
 
         batch_info = {
                       'sensor':'hico',
-                      'epochs':200,
+                      'epochs':150,
                       'batch_size':64,
                       'lrate':.0001,
                       'split':.2,
-                      'layers':[],
                       'targets': ['chl','PC','fl_amp','aphy440','ag440','anap440','bbphy440','bbnap440'],
-                      'cv':5,
                       'meta': meta, #run_info.loc[run,'meta'],
                       'Xpca': n # run_info.loc[run,'Xpca'],}
                       }
@@ -47,19 +48,17 @@ for meta in [True,False]:
         model = MLPregressor(batch_info)
         X,y = model.getXY(refData)
         results = model.prep_results(y)
-        kfold = KFold(n_splits=batch_info['cv'], shuffle=True)
-        count = 0
-        for train, test in kfold.split(X, y):
-            print ('FOLD = {}...'.format(count))
+        for k in range(cv):
+            print ('FOLD = {}...'.format(k))
+            X = shuffle(X)
+            y = shuffle(y)
+            X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2)
             model.build()
-            X_train, X_test = X.iloc[train,:], X.iloc[test,:]
-            y_train, y_test = y.iloc[train,:], y.iloc[test,:] 
             history = model.fit(X_train,y_train)
             results['train_loss'].append(history.history['loss'])
             results['val_loss'].append(history.history['val_loss'])
             y_hat = model.predict(X_test)
             results = model.evaluate(y_hat,np.exp(y_test),results) 
-            count = count+1 
         results['batch_info'] = batch_info
         # save run to disk
         fname = '/content/drive/My Drive/retrieval_results_v2/case_{}.p'.format(case)

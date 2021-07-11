@@ -24,7 +24,6 @@ class MLPregressor(BaseEstimator):
         self.batch_size = batch_info['batch_size']
         self.lrate = batch_info['lrate']
         self.split = batch_info['split']
-        self.layers = batch_info['layers']
         self.targets = batch_info['targets']
         self.meta = batch_info['meta']
         self.Xpca = batch_info['Xpca']
