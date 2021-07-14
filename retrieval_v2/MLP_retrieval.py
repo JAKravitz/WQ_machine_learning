@@ -112,7 +112,7 @@ class MLPregressor(BaseEstimator):
         
         # scale/transform X
         Xlog = np.where(X>0,np.log(X),X)
-        Xt, self.Xscaler = self.transform(Xlog)
+        Xt, self.Xscaler = self.standardScaler(Xlog)
         X = pd.DataFrame(Xt,columns=X.columns)
         
         # scale/transform y
