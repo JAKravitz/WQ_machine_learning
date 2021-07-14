@@ -132,6 +132,7 @@ class MLPregressor(BaseEstimator):
         self.n_in = Xt.shape[1]
         
         self.n_out = y.shape[1]
+        self.vars = y.columns.values
         
         return Xt, y
                 
@@ -208,14 +209,13 @@ class MLPregressor(BaseEstimator):
                      'rRMSE': sc.rrmse,}
         
         if self.scaley:
-            y_hat = self.transform_inverse(y_hat)
-            y_test = self.transform_inverse(y_test)
-            y_hat = pd.DataFrame(y_hat,columns=y_test.columns)
+            y_hat = pd.DataFrame(self.transform_inverse(y_hat),columns=self.vars)
+            y_test = pd.DataFrame(self.transform_inverse(y_test),columns=self.vars)
         else:
-            y_hat = pd.DataFrame(np.exp(y_hat),columns=y_test.columns)
+            y_hat = pd.DataFrame(np.exp(y_hat),columns=self.vars)
             y_test = np.exp(y_test)
     
-        for band in y_test.columns:
+        for band in self.vars:
 
             y_t = y_test.loc[:,band].astype(float)
             y_h = y_hat.loc[:,band].astype(float)

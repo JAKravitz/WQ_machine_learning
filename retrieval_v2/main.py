@@ -44,8 +44,8 @@ for n in [None,20,10]:
                       'targets': target,
                       'cv':3,
                       'meta': None,
-                      'Xpca': n, 
-                      'scaley': s
+                      'Xpca': None, 
+                      'scaley': True
                       }
         
         for key, value in batch_info.items():
@@ -75,7 +75,7 @@ for n in [None,20,10]:
         print ('\n## FINAL MODEL ##\n')
         history2 = model.fit(X_train,y_train)
         y_hat = model.predict(X_test)
-        results = model.evaluate(y_hat,np.exp(y_test),results,'final') 
+        results = model.evaluate(y_hat,y_test,results,'final') 
         results['batch_info'] = batch_info
         # save run to disk
         fname = '/content/drive/My Drive/retrieval_results_rrs/case_{}.p'.format(case)
