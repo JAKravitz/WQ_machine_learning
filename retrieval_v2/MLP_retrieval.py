@@ -27,7 +27,6 @@ class MLPregressor(BaseEstimator):
         self.targets = batch_info['targets']
         self.meta = batch_info['meta']
         self.Xpca = batch_info['Xpca']
-        self.scaley = batch_info['scaley']
     
     def clean(self,data):   
         # data.fillna(0,inplace=True)
