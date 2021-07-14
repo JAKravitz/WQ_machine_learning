@@ -123,7 +123,7 @@ class MLPregressor(BaseEstimator):
         # PCA for X
         if self.Xpca:
             # requires transform
-            Xt, self.Xcomp, self.Xvar = self.nPCA(Xt.values, int(self.Xpca))
+            Xt, self.Xcomp, self.Xvar = self.nPCA(Xt, int(self.Xpca))
             Xt = pd.DataFrame(Xt)
         self.n_in = Xt.shape[1]
         
