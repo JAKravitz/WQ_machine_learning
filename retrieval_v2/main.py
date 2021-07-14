@@ -69,7 +69,7 @@ for n in [None,20,10]:
             results['train_loss'].append(history.history['loss'])
             results['val_loss'].append(history.history['val_loss'])
             y_ht = model.predict(X_tt)
-            results = model.evaluate(y_ht,np.exp(y_tt),results,'cv') 
+            results = model.evaluate(y_ht,y_tt,results,'cv') 
             count = count+1
         
         print ('\n## FINAL MODEL ##\n')

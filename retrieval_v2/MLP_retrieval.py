@@ -209,8 +209,11 @@ class MLPregressor(BaseEstimator):
         
         if self.scaley:
             y_hat = self.transform_inverse(y_hat)
-        
-        y_hat = pd.DataFrame(y_hat,columns=y_test.columns)
+            y_test = self.transform_inverse(y_test)
+            y_hat = pd.DataFrame(y_hat,columns=y_test.columns)
+        else:
+            y_hat = pd.DataFrame(np.exp(y_hat),columns=y_test.columns)
+            y_test = np.exp(y_test)
     
         for band in y_test.columns:
 
