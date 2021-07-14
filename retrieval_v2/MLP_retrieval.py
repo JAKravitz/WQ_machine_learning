@@ -42,6 +42,12 @@ class MLPregressor(BaseEstimator):
         data = scaler.fit_transform(data)
         return data, scaler 
     
+    def standardScaler(self,data):
+        from sklearn.preprocessing import StandardScaler
+        scaler = StandardScaler()
+        data = scaler.fit_transform(data)   
+        return data, scaler
+    
     def nPCA(self,data,n):
         from sklearn.decomposition import PCA
         pca = PCA(n_components=n)
@@ -111,7 +117,7 @@ class MLPregressor(BaseEstimator):
         
         # scale/transform y
         if self.scaley:
-            yt, self.yscaler = self.l2norm(y)
+            yt, self.yscaler = self.standardScaler(y)
             y = pd.DataFrame(yt,columns=y.columns)
         else:
             y = y + .0001
