@@ -112,17 +112,14 @@ class MLPregressor(BaseEstimator):
         y = y.loc[X.index,:]   
         
         # scale/transform X
-        Xt, self.Xscaler = self.l2norm(X)
-        Xt = pd.DataFrame(Xt,columns=X.columns)
+        Xlog = np.where(X>0,np.log(X),X)
+        Xt, self.Xscaler = self.transform(Xlog)
+        X = pd.DataFrame(Xt,columns=X.columns)
         
         # scale/transform y
-        if self.scaley:
-            yt, self.yscaler = self.standardScaler(y)
-            y = pd.DataFrame(yt,columns=y.columns)
-        else:
-            y = y + .0001
-            y = np.log(y.astype('float'))
-
+        ylog = np.where(y>0,np.log(y),y)
+        yt, self.yscaler = self.standardScaler(ylog)
+        y = pd.DataFrame(yt,columns=y.columns)
         
         # PCA for X
         if self.Xpca:
@@ -134,7 +131,7 @@ class MLPregressor(BaseEstimator):
         self.n_out = y.shape[1]
         self.vars = y.columns.values
         
-        return Xt, y
+        return X, y
                 
     def build(self):
     
@@ -144,19 +141,21 @@ class MLPregressor(BaseEstimator):
         #     nhid = 60
         
         self.model = Sequential(
-                [Dense(128, use_bias=False, input_shape=(self.n_in,)), ReLU(),Dropout(0.1),
-                 Dense(64, use_bias=False), ReLU(), Dropout(0.1),
-                 Dense(32, use_bias=False), ReLU(), Dropout(0.1),
+                [Dense(500, kernel_initializer='normal', input_shape=(self.n_in,)), ReLU(),
+                 Dense(200, kernel_initializer='normal'), ReLU(),
+                 Dense(50, kernel_initializer='normal'), ReLU(),
                  Dense(self.n_out)
                  ])
         # compile
-        self.model.compile(Adam(lr=self.lrate),loss='mean_squared_error')
+        self.model.compile(Adam(lr=self.lrate),loss='mean_absolute_error')
         print (self.model.summary())
         return self.model
 
     def prep_results(self,y):
         results = {}
         for k in y.columns:
+            if k in ['cluster']:
+                continue
             results[k] = {'cv' : {'ytest': [],
                                   'yhat': [],
                                   'R2': [],
@@ -208,25 +207,23 @@ class MLPregressor(BaseEstimator):
                      'MAPE': sc.mape,
                      'rRMSE': sc.rrmse,}
         
-        if self.scaley:
-            y_hat = pd.DataFrame(self.transform_inverse(y_hat),columns=self.vars)
-            y_test = pd.DataFrame(self.transform_inverse(y_test),columns=self.vars)
-        else:
-            y_hat = pd.DataFrame(np.exp(y_hat),columns=self.vars)
-            y_test = np.exp(y_test)
+        # revert back to un-transformed data
+        y_hat = pd.DataFrame(self.transform_inverse(y_hat),columns=self.vars)
+        y_test = pd.DataFrame(self.transform_inverse(y_test),columns=self.vars)
+        y_hat = np.exp(y_hat)
+        y_test = np.exp(y_test)
     
         for band in self.vars:
+            if band in ['cluster']:
+                continue
 
             y_t = y_test.loc[:,band].astype(float)
             y_h = y_hat.loc[:,band].astype(float)
             
-            # if scores in ['regScore']:
-            #     true = np.logical_and(y_h > 0, y_t > 0)
-            #     y_tst = y_t[true]
-            #     y_ht = y_h[true]
-            # else:
-            #     y_tst = y_t
-            #     y_ht = y_h
+            # for PC = 0 instances
+            true = np.logical_and(y_h > 0, y_t > 0)
+            y_t = y_t[true]
+            y_h = y_h[true]
 
             for stat in scoreDict:
                 results[band][q][stat].append(scoreDict[stat](y_t,y_h))
