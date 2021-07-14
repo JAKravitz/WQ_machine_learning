@@ -27,6 +27,7 @@ class MLPregressor(BaseEstimator):
         self.targets = batch_info['targets']
         self.meta = batch_info['meta']
         self.Xpca = batch_info['Xpca']
+        self.scaley = batch_info['scaley']
     
     def clean(self,data):   
         # data.fillna(0,inplace=True)
@@ -103,11 +104,19 @@ class MLPregressor(BaseEstimator):
         # clean 
         X = self.clean(X)
         y = y.loc[X.index,:]   
-        y = y + .0001
         
         # scale/transform X
         Xt, self.Xscaler = self.l2norm(X)
-        Xt = pd.DataFrame(Xt,columns=X.columns) 
+        Xt = pd.DataFrame(Xt,columns=X.columns)
+        
+        # scale/transform y
+        if self.scaley:
+            yt, self.yscaler = self.l2norm(y)
+            y = pd.DataFrame(yt,columns=y.columns)
+        else:
+            y = y + .0001
+            y = np.log(y.astype('float'))
+
         
         # PCA for X
         if self.Xpca:
@@ -116,29 +125,25 @@ class MLPregressor(BaseEstimator):
             Xt = pd.DataFrame(Xt)
         self.n_in = Xt.shape[1]
         
-        # log y
-        y = np.log(y.astype('float'))
         self.n_out = y.shape[1]
         
         return Xt, y
                 
     def build(self):
-        
-        if self.n_in in [10,20]:
-            nhid = 10
-            nhid2 = 10
-        else:
-            nhid = 60
-            nhid2 = 35
+    
+        # if self.n_in in [10,20]:
+        #     nhid = 10
+        # else:
+        #     nhid = 60
         
         self.model = Sequential(
-                [Dense(self.n_in+1, use_bias=False, input_shape=(self.n_in,)), ReLU(),Dropout(0.1),
-                 Dense(nhid, use_bias=False), ReLU(), Dropout(0.1),
-                 Dense(nhid2, use_bias=False), ReLU(), Dropout(0.1),
+                [Dense(128, use_bias=False, input_shape=(self.n_in,)), ReLU(),Dropout(0.1),
+                 Dense(64, use_bias=False), ReLU(), Dropout(0.1),
+                 Dense(32, use_bias=False), ReLU(), Dropout(0.1),
                  Dense(self.n_out)
                  ])
         # compile
-        self.model.compile(Adam(lr=self.lrate),loss='mean_absolute_error')
+        self.model.compile(Adam(lr=self.lrate),loss='mean_squared_error')
         print (self.model.summary())
         return self.model
 
@@ -185,7 +190,7 @@ class MLPregressor(BaseEstimator):
         y_hat = self.model.predict(X_test)
         toc = timeit.default_timer()
         self.pred_time = toc-tic 
-        return np.exp(y_hat)
+        return y_hat
 
     def evaluate(self,y_hat,y_test,results,q):
         import scorers as sc
@@ -195,6 +200,9 @@ class MLPregressor(BaseEstimator):
                      'Bias': sc.bias,
                      'MAPE': sc.mape,
                      'rRMSE': sc.rrmse,}
+        
+        if self.scaley:
+            y_hat = self.transform_inverse(y_hat)
         
         y_hat = pd.DataFrame(y_hat,columns=y_test.columns)
     

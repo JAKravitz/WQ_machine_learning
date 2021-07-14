@@ -82,19 +82,15 @@ def shot_noise(hicowl,reflectance,F0int):
     T = GSD / V # exposure time
     # toa calc
     theta = reflectance.loc[' SZA']
-    refl = reflectance.filter(regex='\d')
-    toa = (F0int * refl * cos(theta)) / np.pi()
+    refl = reflectance.filter(regex='^[0-9]')
+    toa = (F0int * refl * cos(theta)) / np.pi
     # shot noise calc
-    shot = sqrt( (hicowl/(h*c)) * toa * (np.pi()/4) * (D**2/f**2) * p**2 * T * nsys )
+    shot = 0#sqrt( (hicowl/(h*c)) * toa * (np.pi/4) * (D**2/f**2) * p**2 * T * nsys )
     return toa,shot
 
 #%%
+hico = refData['hico']
+reflectance = hico.iloc[793,:]
+toa, shot = shot_noise(hicowl, reflectance, F0int)
 
 
-
-
-
-#%%    
-fig, ax = plt.subplots()
-ax.plot(dkl,dkval,c='b')
-ax.plot(hicowl,dkint,c='r')
