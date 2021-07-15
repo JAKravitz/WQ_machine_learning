@@ -104,8 +104,8 @@ class MLPregressor(BaseEstimator):
             X = pd.concat([X,meta],axis=1)
 
         # get outputs
-        t = [x for x in self.targets if x is not 'cluster']
-        y = data[t]
+        # t = [x for x in self.targets if x is not 'cluster']
+        y = data[self.targets]
         
         # clean 
         X = self.clean(X)
@@ -117,10 +117,10 @@ class MLPregressor(BaseEstimator):
         Xt = pd.DataFrame(Xt,columns=X.columns)
         
         # scale/transform y
+        y['cluster'] = y['cluster'] + 1
         ylog = np.where(y>0,np.log(y),y)
         yt, self.yscaler = self.standardScaler(ylog)
         y = pd.DataFrame(yt,columns=y.columns)
-        y['cluster'] = data.cluster
         
         # PCA for X
         if self.Xpca:
@@ -269,13 +269,13 @@ class MLPregressor(BaseEstimator):
         y_test = np.where(y_test>0,np.exp(y_test),y_test)
         
         # change cluster values to OWT
-        clus = clus.replace(to_replace=[1,4,10],value='Mild')
-        clus = clus.replace(to_replace=[0,11],value='NAP')
-        clus = clus.replace(to_replace=[7,12],value='CDOM')
-        clus = clus.replace(to_replace=[6],value='Euk')
-        clus = clus.replace(to_replace=[5,8],value='Cy')
-        clus = clus.replace(to_replace=[2],value='Scum')
-        clus = clus.replace(to_replace=[3,9],value='Oligo')
+        clus = clus.replace(to_replace=[2,5,11],value='Mild')
+        clus = clus.replace(to_replace=[1,12],value='NAP')
+        clus = clus.replace(to_replace=[8,13],value='CDOM')
+        clus = clus.replace(to_replace=[7],value='Euk')
+        clus = clus.replace(to_replace=[6,9],value='Cy')
+        clus = clus.replace(to_replace=[3],value='Scum')
+        clus = clus.replace(to_replace=[4,10],value='Oligo')
         y_hat['cluster'] = clus
         y_test['cluster'] = clus
         
