@@ -49,6 +49,7 @@ for n in [None,20,10]:
     model = MLPregressor(batch_info)
     X,y = model.getXY(rrsData)
     results = model.prep_results(y)
+    results = model.owt_prep_results(y, results)
     X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=batch_info['split'])
     kfold = KFold(n_splits=batch_info['cv'], shuffle=True)
     count = 0
@@ -80,11 +81,11 @@ for n in [None,20,10]:
 # import pickle
 # import matplotlib.pyplot as plt
 
-# data = pickle.load( open( "/Users/jakravit/Desktop/retrieval_results_rrs/case_4.p", "rb" ) )
+# data = pickle.load( open( "/Users/jakravit/Desktop/retrieval_results_rrs/case_1.p", "rb" ) )
 # fig, ax = plt.subplots()
-# ax.scatter(data['chl']['final']['ytest'], data['chl']['final']['yhat'],s=.1,c='b')
+# ax.scatter(data['PC']['final']['ytest'], data['PC']['final']['yhat'],s=.1,c='b')
 # ax.set_xscale('log')
 # ax.set_yscale('log')
-# ax.set_xlim(0,500)
-# ax.set_ylim(0,500)
+# ax.set_xlim(.01,2000)
+# ax.set_ylim(.01,2000)
 
