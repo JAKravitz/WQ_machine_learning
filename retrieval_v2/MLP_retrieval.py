@@ -226,10 +226,10 @@ class MLPregressor(BaseEstimator):
                      'rRMSE': sc.rrmse,}
         
         # revert back to un-transformed data
-        y_hat = pd.DataFrame(self.transform_inverse(y_hat),columns=self.vars)
-        y_test = pd.DataFrame(self.transform_inverse(y_test),columns=self.vars)
-        y_hat = np.where(y_hat>0,np.exp(y_hat),y_hat)
-        y_test = np.where(y_test>0,np.exp(y_test),y_test)
+        y_hat = self.transform_inverse(y_hat)
+        y_test = self.transform_inverse(y_test)
+        y_hat = pd.DataFrame(np.where(y_hat>0,np.exp(y_hat),y_hat), columns=self.vars)
+        y_test = pd.DataFrame(np.where(y_test>0,np.exp(y_test),y_test), columns=self.vars)
     
         for band in self.vars:
             if band in ['cluster']:
