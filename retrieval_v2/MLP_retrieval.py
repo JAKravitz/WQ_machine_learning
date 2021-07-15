@@ -298,10 +298,10 @@ class MLPregressor(BaseEstimator):
                 y_h = y_h[true]
     
                 for stat in scoreDict:
-                    results[band][c][stat].append(scoreDict[stat](y_t,y_h))
+                    results[band]['owt'][c][stat].append(scoreDict[stat](y_t,y_h))
                 
-                results[band][c]['ytest'].append(y_t)
-                results[band][c]['yhat'].append(y_h)
+                results[band]['owt'][c]['ytest'].append(y_t)
+                results[band]['owt'][c]['yhat'].append(y_h)
                
             
         
