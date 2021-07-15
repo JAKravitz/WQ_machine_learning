@@ -58,14 +58,14 @@ for n in [None,20,10]:
         X_tn, X_tt = X_train.iloc[train,:], X_train.iloc[test,:]
         y_tn, y_tt = y_train.iloc[train,:], y_train.iloc[test,:] 
         history = model.fit(X_tn,y_tn)
-        results['train_loss'].append(history.history['loss'])
-        results['val_loss'].append(history.history['val_loss'])
         y_ht = model.predict(X_tt)
         results = model.evaluate(y_ht,y_tt,results,'cv') 
         count = count+1
     
     print ('\n## FINAL MODEL ##\n')
     history2 = model.fit(X_train,y_train)
+    results['train_loss'].append(history2.history['loss'])
+    results['val_loss'].append(history2.history['val_loss'])
     y_hat = model.predict(X_test)
     results = model.evaluate(y_hat,y_test,results,'final') 
     results = model.owt_evaluate(y_hat,y_test,results)
