@@ -113,7 +113,7 @@ class MLPregressor(BaseEstimator):
         # scale/transform X
         Xlog = np.where(X>0,np.log(X),X)
         Xt, self.Xscaler = self.standardScaler(Xlog)
-        X = pd.DataFrame(Xt,columns=X.columns)
+        Xt = pd.DataFrame(Xt,columns=X.columns)
         
         # scale/transform y
         ylog = np.where(y>0,np.log(y),y)
@@ -123,14 +123,14 @@ class MLPregressor(BaseEstimator):
         # PCA for X
         if self.Xpca:
             # requires transform
-            Xt, self.Xcomp, self.Xvar = self.nPCA(Xt, int(self.Xpca))
+            Xt, self.Xcomp, self.Xvar = self.nPCA(Xt.values, int(self.Xpca))
             Xt = pd.DataFrame(Xt)
         self.n_in = Xt.shape[1]
         
         self.n_out = y.shape[1]
         self.vars = y.columns.values
         
-        return X, y
+        return Xt, y
                 
     def build(self):
     
