@@ -49,7 +49,6 @@ for n in [None,20,10]:
     model = MLPregressor(batch_info)
     X,y = model.getXY(rrsData)
     results = model.prep_results(y)
-    results = model.owt_prep_results(y, results)
     X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=batch_info['split'])
     kfold = KFold(n_splits=batch_info['cv'], shuffle=True)
     count = 0

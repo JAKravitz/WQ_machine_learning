@@ -154,10 +154,10 @@ class MLPregressor(BaseEstimator):
 
     def prep_results(self,y):
         results = {}
-        for k in y.columns:
-            if k in ['cluster']:
+        for var in y.columns:
+            if var in ['cluster']:
                 continue
-            results[k] = {'cv' : {'ytest': [],
+            results[var] = {'cv' : {'ytest': [],
                                   'yhat': [],
                                   'R2': [],
                                   'RMSE': [],
@@ -173,7 +173,19 @@ class MLPregressor(BaseEstimator):
                                       'RMSELE': [],
                                       'Bias': [],
                                       'MAPE': [],
-                                      'rRMSE': []}}
+                                      'rRMSE': []},
+                          'owt':[]}
+            
+            clusters = ['Mild','NAP','CDOM','Euk','Cy','Scum','Oligo']
+            for k in clusters:
+                results[var]['owt'][k] = {'ytest': [],
+                                          'yhat': [],
+                                          'R2': [],
+                                          'RMSE': [],
+                                          'RMSELE': [],
+                                          'Bias': [],
+                                          'MAPE': [],
+                                          'rRMSE': []}
             results['fit_time'] = []
             results['pred_time'] = []
             results['train_loss'] = []
