@@ -158,23 +158,29 @@ class MLPregressor(BaseEstimator):
             if var in ['cluster']:
                 continue
             results[var] = {'cv' : {'ytest': [],
-                                  'yhat': [],
-                                  'R2': [],
-                                  'RMSE': [],
-                                  'RMSELE': [],
-                                  'Bias': [],
-                                  'MAPE': [],
-                                  'rRMSE': []
-                                  },
-                          'final' : {'ytest': [],
-                                      'yhat': [],
-                                      'R2': [],
-                                      'RMSE': [],
-                                      'RMSELE': [],
-                                      'Bias': [],
-                                      'MAPE': [],
-                                      'rRMSE': []},
-                          'owt':[]}
+                                    'yhat': [],
+                                    'R2': [],
+                                    'RMSE': [],
+                                    'RMSELE': [],
+                                    'Bias': [],
+                                    'MAPE': [],
+                                    'rRMSE': []},
+                            'final' : {'ytest': [],
+                                       'yhat': [],
+                                       'R2': [],
+                                       'RMSE': [],
+                                       'RMSELE': [],
+                                       'Bias': [],
+                                       'MAPE': [],
+                                       'rRMSE': []},
+                            'owt' : {'Mild' : [],
+                                     'NAP' : [],
+                                     'CDOM' : [],
+                                     'Euk' : [],
+                                     'Cy' : [],
+                                     'Scum' : [],
+                                     'Oligo': []}
+                            }
             
             clusters = ['Mild','NAP','CDOM','Euk','Cy','Scum','Oligo']
             for k in clusters:
@@ -190,23 +196,6 @@ class MLPregressor(BaseEstimator):
             results['pred_time'] = []
             results['train_loss'] = []
             results['val_loss'] = []
-        return results
-    
-    def owt_prep_results(self,y,results):
-        for var in y.columns:
-            if var == 'cluster':
-                continue
-            clusters = ['Mild','NAP','CDOM','Euk','Cy','Scum','Oligo']
-            results[var] = {}
-            for k in clusters:
-                results[var][k] = {'ytest': [],
-                                    'yhat': [],
-                                    'R2': [],
-                                    'RMSE': [],
-                                    'RMSELE': [],
-                                    'Bias': [],
-                                    'MAPE': [],
-                                    'rRMSE': []}
         return results
 
     def fit(self, X_train, y_train):
