@@ -68,6 +68,7 @@ for n in [None,20,10]:
     history2 = model.fit(X_train,y_train)
     y_hat = model.predict(X_test)
     results = model.evaluate(y_hat,y_test,results,'final') 
+    results = model.owt_evaluate(y_hat,y_test,results)
     results['batch_info'] = batch_info
     # save run to disk
     fname = '/content/drive/My Drive/retrieval_results_rrs/case_{}.p'.format(case)
@@ -77,14 +78,14 @@ for n in [None,20,10]:
     case = case+1
             
 #%%
-# import pickle
-# import matplotlib.pyplot as plt
+import pickle
+import matplotlib.pyplot as plt
 
-# data = pickle.load( open( "/Users/jakravit/Desktop/retrieval_results_rrs/case_1.p", "rb" ) )
-# fig, ax = plt.subplots()
-# ax.scatter(data['PC']['final']['ytest'], data['PC']['final']['yhat'],s=.1,c='b')
-# ax.set_xscale('log')
-# ax.set_yscale('log')
-# ax.set_xlim(.01,2000)
-# ax.set_ylim(.01,2000)
+data = pickle.load( open( "/Users/jakravit/Desktop/retrieval_results_rrs/case_1.p", "rb" ) )
+fig, ax = plt.subplots()
+ax.scatter(data['PC']['final']['ytest'], data['PC']['final']['yhat'],s=.1,c='b')
+ax.set_xscale('log')
+ax.set_yscale('log')
+ax.set_xlim(.01,2000)
+ax.set_ylim(.01,2000)
 
