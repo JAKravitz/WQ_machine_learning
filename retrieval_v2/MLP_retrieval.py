@@ -266,7 +266,7 @@ class MLPregressor(BaseEstimator):
         y_hat = self.transform_inverse(y_hat)
         y_test = self.transform_inverse(y_test)
         y_hat = pd.DataFrame(np.exp(y_hat), columns=self.vars)
-        y_test = pd.DataFrame(np.exp(y_test))# columns=self.vars)
+        y_test = pd.DataFrame(np.exp(y_test), columns=self.vars)
         clus = y_test.cluster.astype(int)
         
         # change cluster values to OWT
