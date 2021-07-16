@@ -229,8 +229,8 @@ class MLPregressor(BaseEstimator):
         # revert back to un-transformed data
         y_hat = self.transform_inverse(y_hat)
         y_test = self.transform_inverse(y_test)
-        y_hat = pd.DataFrame(np.where(y_hat>0,np.exp(y_hat),y_hat), columns=self.vars)
-        y_test = pd.DataFrame(np.where(y_test>0,np.exp(y_test),y_test), columns=self.vars)
+        y_hat = pd.DataFrame(np.exp(y_hat), columns=self.vars)
+        y_test = pd.DataFrame(np.exp(y_test), columns=self.vars)
     
         for band in self.vars:
             if band in ['cluster']:
@@ -302,6 +302,8 @@ class MLPregressor(BaseEstimator):
                 
                 results[band]['owt'][c]['ytest'].append(y_t)
                 results[band]['owt'][c]['yhat'].append(y_h)
+        return results
+    
                
             
         
