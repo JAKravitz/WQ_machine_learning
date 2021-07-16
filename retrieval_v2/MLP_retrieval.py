@@ -230,7 +230,12 @@ class MLPregressor(BaseEstimator):
         y_hat = self.transform_inverse(y_hat)
         y_test = self.transform_inverse(y_test)
         y_hat = pd.DataFrame(np.exp(y_hat), columns=self.vars)
-        y_test = pd.DataFrame(np.exp(y_test), columns=self.vars)
+        y_test = np.exp(y_test)
+        clus = y_test[:,-1:].astype(int)
+        y_test = np.where(y_test[:,:-1] == 1, 0, y_test)
+        y_test = np.hstack((y_test,clus))
+        y_test = pd.DataFrame(y_test, columns=self.vars)
+        clus = pd.DataFrame(clus)
     
         for band in self.vars:
             if band in ['cluster']:
@@ -240,7 +245,8 @@ class MLPregressor(BaseEstimator):
             y_h = y_hat.loc[:,band].astype(float)
             
             # for PC = 0 instances
-            true = np.logical_and(y_h > 0, y_t > 0)
+            #true = np.logical_and(y_h > 0, y_t > 0)
+            true = y_t > 0
             y_t = y_t[true]
             y_h = y_h[true]
 
@@ -266,8 +272,12 @@ class MLPregressor(BaseEstimator):
         y_hat = self.transform_inverse(y_hat)
         y_test = self.transform_inverse(y_test)
         y_hat = pd.DataFrame(np.exp(y_hat), columns=self.vars)
-        y_test = pd.DataFrame(np.exp(y_test), columns=self.vars)
-        clus = y_test.cluster.astype(int)
+        y_test = np.exp(y_test)
+        clus = y_test[:,-1:].astype(int)
+        y_test = np.where(y_test[:,:-1] == 1, 0, y_test)
+        y_test = np.hstack((y_test,clus))
+        y_test = pd.DataFrame(y_test, columns=self.vars)
+        clus = pd.DataFrame(clus)
         
         # change cluster values to OWT
         clus = clus.replace(to_replace=[2,5,11],value='Mild')
@@ -293,7 +303,8 @@ class MLPregressor(BaseEstimator):
                 y_h = hatgroup.loc[:,band].astype(float)
                 
                 # for PC = 0 instances
-                true = np.logical_and(y_h > 0, y_t > 0)
+                #true = np.logical_and(y_h > 0, y_t > 0)
+                true = y_t > 0
                 y_t = y_t[true]
                 y_h = y_h[true]
     
