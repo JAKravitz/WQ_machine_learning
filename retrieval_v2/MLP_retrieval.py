@@ -265,9 +265,9 @@ class MLPregressor(BaseEstimator):
         # revert back to un-transformed data, add cluster column
         y_hat = self.transform_inverse(y_hat)
         y_test = self.transform_inverse(y_test)
-        y_hat = pd.DataFrame(np.where(y_hat>0,np.exp(y_hat),y_hat), columns=self.vars)
-        y_test = pd.DataFrame(np.where(y_test>0,np.exp(y_test),y_test), columns=self.vars)
-        clus = y_test.cluster
+        y_hat = pd.DataFrame(np.exp(y_hat), columns=self.vars)
+        y_test = pd.DataFrame(np.exp(y_test))# columns=self.vars)
+        clus = y_test.cluster.astype(int)
         
         # change cluster values to OWT
         clus = clus.replace(to_replace=[2,5,11],value='Mild')
