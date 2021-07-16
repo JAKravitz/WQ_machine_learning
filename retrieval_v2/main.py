@@ -31,7 +31,7 @@ for n in [None,20,10]:
     batch_info = {
                   'sensor':'hico',
                   'epochs':100,
-                  'batch_size':32,
+                  'batch_size':16,
                   'lrate':.0001,
                   'split':.1,
                   'targets': target,
