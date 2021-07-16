@@ -78,14 +78,14 @@ for n in [None,20,10]:
     case = case+1
             
 #%%
-import pickle
-import matplotlib.pyplot as plt
+# import pickle
+# import matplotlib.pyplot as plt
 
-data = pickle.load( open( "/Users/jakravit/Desktop/retrieval_results_rrs/case_1.p", "rb" ) )
-fig, ax = plt.subplots()
-ax.scatter(data['chl']['final']['ytest'], data['chl']['final']['yhat'],s=.1,c='b')
-ax.set_xscale('log')
-ax.set_yscale('log')
-ax.set_xlim(.01,2000)
-ax.set_ylim(.01,2000)
+# data = pickle.load( open( "/Users/jakravit/Desktop/retrieval_results_rrs/case_1.p", "rb" ) )
+# fig, ax = plt.subplots()
+# ax.scatter(data['chl']['final']['ytest'], data['chl']['final']['yhat'],s=.1,c='b')
+# ax.set_xscale('log')
+# ax.set_yscale('log')
+# ax.set_xlim(.01,2000)
+# ax.set_ylim(.01,2000)
 

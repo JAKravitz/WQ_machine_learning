@@ -278,7 +278,7 @@ class MLPregressor(BaseEstimator):
         #y_test = np.where(y_test[:,:-1] == 1, 0, y_test[:,:-1])
         #y_test = np.hstack((y_test,clus))
         y_test = pd.DataFrame(y_test, columns=self.vars)
-        clus = np.exp(y_test.cluster)
+        clus = np.exp(y_test.cluster).astype(int)
         y_test['cluster'] = clus
         
         # change cluster values to OWT
