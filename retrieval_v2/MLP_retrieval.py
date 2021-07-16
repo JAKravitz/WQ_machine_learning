@@ -220,22 +220,23 @@ class MLPregressor(BaseEstimator):
     def evaluate(self,y_hat,y_test,results,q):
         import scorers as sc
         scoreDict = {'R2': sc.r2,
-                     'RMSE': sc.rmse,
-                     'RMSELE': sc.rmsele,
-                     'Bias': sc.bias,
-                     'MAPE': sc.mape,
-                     'rRMSE': sc.rrmse,}
+                     'RMSE': sc.log_rmse,
+                     'RMSELE': sc.log_rmsele,
+                     'Bias': sc.log_bias,
+                     'MAPE': sc.log_mape,
+                     'rRMSE': sc.log_rrmse,}
         
         # revert back to un-transformed data
         y_hat = self.transform_inverse(y_hat)
         y_test = self.transform_inverse(y_test)
-        y_hat = pd.DataFrame(np.exp(y_hat), columns=self.vars)
-        y_test = np.exp(y_test)
-        clus = y_test[:,-1:].astype(int)
-        y_test = np.where(y_test[:,:-1] == 1, 0, y_test[:,:-1])
-        y_test = np.hstack((y_test,clus))
+        y_hat = pd.DataFrame(y_hat, columns=self.vars)
+        #y_test = np.exp(y_test)
+        #clus = y_test[:,-1:].astype(int)
+        #y_test = np.where(y_test[:,:-1] == 1, 0, y_test[:,:-1])
+        #y_test = np.hstack((y_test,clus))
         y_test = pd.DataFrame(y_test, columns=self.vars)
-        clus = pd.DataFrame(clus)
+        clus = np.exp(y_test.cluster)
+        y_test['cluster'] = clus
     
         for band in self.vars:
             if band in ['cluster']:
@@ -245,10 +246,10 @@ class MLPregressor(BaseEstimator):
             y_h = y_hat.loc[:,band].astype(float)
             
             # for PC = 0 instances
-            #true = np.logical_and(y_h > 0, y_t > 0)
-            true = y_t > 0
-            y_t = y_t[true]
-            y_h = y_h[true]
+            # true = np.logical_and(y_h > 0, y_t > 0)
+            # true = y_t > 0
+            # y_t = y_t[true]
+            # y_h = y_h[true]
 
             for stat in scoreDict:
                 results[band][q][stat].append(scoreDict[stat](y_t,y_h))
@@ -262,22 +263,23 @@ class MLPregressor(BaseEstimator):
     def owt_evaluate(self,y_hat,y_test,results):
         import scorers as sc
         scoreDict = {'R2': sc.r2,
-                     'RMSE': sc.rmse,
-                     'RMSELE': sc.rmsele,
-                     'Bias': sc.bias,
-                     'MAPE': sc.mape,
-                     'rRMSE': sc.rrmse,}    
+                     'RMSE': sc.log_rmse,
+                     'RMSELE': sc.log_rmsele,
+                     'Bias': sc.log_bias,
+                     'MAPE': sc.log_mape,
+                     'rRMSE': sc.log_rrmse,}   
         
         # revert back to un-transformed data, add cluster column
         y_hat = self.transform_inverse(y_hat)
         y_test = self.transform_inverse(y_test)
-        y_hat = pd.DataFrame(np.exp(y_hat), columns=self.vars)
-        y_test = np.exp(y_test)
-        clus = y_test[:,-1:].astype(int)
-        y_test = np.where(y_test[:,:-1] == 1, 0, y_test[:,:-1])
-        y_test = np.hstack((y_test,clus))
+        y_hat = pd.DataFrame(y_hat, columns=self.vars)
+        #y_test = np.exp(y_test)
+        #clus = y_test[:,-1:].astype(int)
+        #y_test = np.where(y_test[:,:-1] == 1, 0, y_test[:,:-1])
+        #y_test = np.hstack((y_test,clus))
         y_test = pd.DataFrame(y_test, columns=self.vars)
-        clus = pd.DataFrame(clus)
+        clus = np.exp(y_test.cluster)
+        y_test['cluster'] = clus
         
         # change cluster values to OWT
         clus = clus.replace(to_replace=[2,5,11],value='Mild')
@@ -303,10 +305,10 @@ class MLPregressor(BaseEstimator):
                 y_h = hatgroup.loc[:,band].astype(float)
                 
                 # for PC = 0 instances
-                #true = np.logical_and(y_h > 0, y_t > 0)
-                true = y_t > 0
-                y_t = y_t[true]
-                y_h = y_h[true]
+                # true = np.logical_and(y_h > 0, y_t > 0)
+                # true = y_t > 0
+                # y_t = y_t[true]
+                # y_h = y_h[true]
     
                 for stat in scoreDict:
                     results[band]['owt'][c][stat].append(scoreDict[stat](y_t,y_h))
