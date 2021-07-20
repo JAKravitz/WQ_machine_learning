@@ -118,9 +118,12 @@ class MLPregressor(BaseEstimator):
         
         # scale/transform y
         y['cluster'] = y['cluster'] + 1
-        ylog = np.where(y>0,np.log(y),y)
+        y = y + .001
+        y['cluster'] = round(y['cluster'])
+        #ylog = np.where(y>0,np.log(y),y)
+        ylog = np.log(y)
         yt, self.yscaler = self.standardScaler(ylog)
-        y = pd.DataFrame(yt,columns=y.columns)
+        y2 = pd.DataFrame(yt,columns=y.columns)
         
         # PCA for X
         if self.Xpca:
@@ -129,10 +132,10 @@ class MLPregressor(BaseEstimator):
             Xt = pd.DataFrame(Xt)
         self.n_in = Xt.shape[1]
         
-        self.n_out = y.shape[1]
-        self.vars = y.columns.values
+        self.n_out = y2.shape[1]
+        self.vars = y2.columns.values
         
-        return Xt, y
+        return Xt, y2, y
                 
     def build(self):
     
@@ -235,8 +238,8 @@ class MLPregressor(BaseEstimator):
         #y_test = np.where(y_test[:,:-1] == 1, 0, y_test[:,:-1])
         #y_test = np.hstack((y_test,clus))
         y_test = pd.DataFrame(y_test, columns=self.vars)
-        clus = np.exp(y_test.cluster)
-        y_test['cluster'] = clus
+        # clus = np.exp(y_test.cluster)
+        # y_test['cluster'] = clus
     
         for band in self.vars:
             if band in ['cluster']:
