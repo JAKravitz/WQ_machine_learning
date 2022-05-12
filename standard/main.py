@@ -56,8 +56,8 @@ y_hat = model.predict(X_test)
 results = model.evaluate(y_hat,y_test,results,'final') 
 results['batch_info'] = batch_info
 
-# plot
+#%% plot
 fig, ax = plt.subplots()
-ax.scatter(results['chl']['final']['ytest'], results['chl']['final']['yhat'],s=.1,c='k')
+ax.scatter(results['agd']['final']['ytest'], results['agd']['final']['yhat'],s=.1,c='k')
             
 
