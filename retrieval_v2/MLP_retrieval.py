@@ -14,6 +14,7 @@ import timeit
 from sklearn.base import BaseEstimator
 import pandas as pd
 import numpy as np
+import retrieval_v2.scorers as sc
 
 
 class MLPregressor(BaseEstimator):
@@ -96,16 +97,17 @@ class MLPregressor(BaseEstimator):
 
         # get meta columns
         if self.meta:
-            metacols = ['cluster',' SZA',' OZA',' SAA',' OAA',' aot550',' astmx',' ssa400',
-                        ' ssa675',' ssa875',' altitude',' adjFactor', ]
+            metacols = [' SZA',' OZA',' SAA',' OAA',' altitude' ]
             meta = data.loc[:,metacols]
-            meta[' adjFactor'] = meta[' adjFactor'].replace(to_replace=(' '),value=0)
-            meta[' adjFactor'] = [float(i) for i in meta[' adjFactor']]
+            # meta[' adjFactor'] = meta[' adjFactor'].replace(to_replace=(' '),value=0)
+            # meta[' adjFactor'] = [float(i) for i in meta[' adjFactor']]
             X = pd.concat([X,meta],axis=1)
 
         # get outputs
         # t = [x for x in self.targets if x is not 'cluster']
         y = data[self.targets]
+        y[' adjFactor'] = y[' adjFactor'].replace(to_replace=(' '),value=0)
+        y[' adjFactor'] = [float(i) for i in y[' adjFactor']]
         
         # clean 
         X = self.clean(X)
@@ -118,10 +120,10 @@ class MLPregressor(BaseEstimator):
         
         # scale/transform y
         y['cluster'] = y['cluster'] + 1
-        y = y + .001
+        # y = y.astype(float) + .001
         y['cluster'] = round(y['cluster'])
-        #ylog = np.where(y>0,np.log(y),y)
-        ylog = np.log(y)
+        ylog = np.where(y>0,np.log(y),y)
+        # ylog = np.log(y)
         yt, self.yscaler = self.standardScaler(ylog)
         y2 = pd.DataFrame(yt,columns=y.columns)
         
@@ -131,6 +133,10 @@ class MLPregressor(BaseEstimator):
             Xt, self.Xcomp, self.Xvar = self.nPCA(Xt.values, int(self.Xpca))
             Xt = pd.DataFrame(Xt)
         self.n_in = Xt.shape[1]
+        
+        # # clean 
+        # Xt = self.clean(X)
+        # y2 = y2.loc[Xt.index,:] 
         
         self.n_out = y2.shape[1]
         self.vars = y2.columns.values
@@ -146,7 +152,9 @@ class MLPregressor(BaseEstimator):
         
         self.model = Sequential(
                 [Dense(500, kernel_initializer='normal', input_shape=(self.n_in,)), ReLU(),
+                 # Dense(300, kernel_initializer='normal'), ReLU(),
                  Dense(200, kernel_initializer='normal'), ReLU(),
+                 # Dense(100, kernel_initializer='normal'), ReLU(),
                  Dense(50, kernel_initializer='normal'), ReLU(),
                  Dense(self.n_out)
                  ])
@@ -221,7 +229,7 @@ class MLPregressor(BaseEstimator):
         return y_hat
 
     def evaluate(self,y_hat,y_test,results,q):
-        import scorers as sc
+        # import scorers as sc
         scoreDict = {'R2': sc.r2,
                      'RMSE': sc.log_rmse,
                      'RMSELE': sc.log_rmsele,

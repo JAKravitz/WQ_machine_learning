@@ -14,7 +14,7 @@ import timeit
 from sklearn.base import BaseEstimator
 import pandas as pd
 import numpy as np
-import standard.scorers as sc
+import scorers as sc
 
 
 class MLPregressor(BaseEstimator):
@@ -75,16 +75,28 @@ class MLPregressor(BaseEstimator):
         X = self.clean(X)
         y = y.loc[X.index,:]   
         
+        # scale/transform y
+        if self.targets == ['totPC']:
+            y = y[y.PC != 0]
+            ylog = np.log(y)
+            # ylog = np.where(y>0,np.log(y),y)
+            yt, self.yscaler = self.standardScaler(ylog)
+        elif self.targets == ['admix']:
+            yt, self.yscaler = self.standardScaler(y)
+        else:
+            # totslope = y.loc[:,'min_Tot_slope']
+            # yd = y.drop('min_Tot_slope',axis=1)
+            y = y.astype(float) + .0001
+            ylog = np.log(y)
+            # ylog = pd.concat([ylog,totslope],axis=1)
+            yt, self.yscaler = self.standardScaler(ylog)
+        y2 = pd.DataFrame(yt,columns=y.columns)
+        
         # scale/transform X
+        X = X.loc[y.index,:]
         Xlog = np.where(X>0,np.log(X),X)
         Xt, self.Xscaler = self.standardScaler(Xlog)
         Xt = pd.DataFrame(Xt,columns=X.columns)
-        
-        # scale/transform y
-        y = y + .001
-        ylog = np.log(y)
-        yt, self.yscaler = self.standardScaler(ylog)
-        y2 = pd.DataFrame(yt,columns=y.columns)
         
         # PCA for X
         if self.Xpca:
@@ -96,17 +108,53 @@ class MLPregressor(BaseEstimator):
         self.n_out = y2.shape[1]
         self.vars = y2.columns.values
         
+        return Xt, y2, y, self.Xscaler, self.yscaler
+    
+    def getXY_obs(self,data): 
+        # inputs
+        X_obs = data.filter(regex='^[0-9]')
+        
+        # outputs
+        y_obs = data[self.targets]
+        
+        # scale/transform new obs X
+        Xlog = np.where(X_obs>0,np.log(X_obs),X_obs)
+        Xt = self.Xscaler.fit_transform(Xlog)
+        Xt = pd.DataFrame(Xt,columns=X_obs.columns)
+        
+        # scale/transform y
+        y = y_obs + .001
+        ylog = np.log(y)
+        yt, self.yscaler = self.standardScaler(ylog)
+        y2 = pd.DataFrame(yt,columns=y_obs.columns)
+        
+        # PCA for X
+        if self.Xpca:
+            # requires transform
+            Xt, self.Xcomp, self.Xvar = self.nPCA(Xt.values, int(self.Xpca))
+            Xt = pd.DataFrame(Xt)
+        # self.n_in = Xt.shape[1]
+        
+        # self.n_out = y2.shape[1]
+        # self.vars = y2.columns.values
         return Xt, y2, y
-                
+    
     def build(self):
         self.model = Sequential(
-                [Dense(500, kernel_initializer='normal', input_shape=(self.n_in,)), ReLU(),
-                 Dense(200, kernel_initializer='normal'), ReLU(),
-                 Dense(50, kernel_initializer='normal'), ReLU(),
-                 Dense(self.n_out)
-                 ])
-        # compile
-        self.model.compile(Adam(lr=self.lrate),loss='mean_absolute_error')
+                [Dense(128, kernel_initializer='normal', input_shape=(self.n_in,)), ReLU(),
+                  Dense(64, kernel_initializer='normal'), ReLU(),
+                  Dense(32, kernel_initializer='normal'), ReLU(),
+                  Dense(5, kernel_initializer='normal'), ReLU(),
+                  Dense(self.n_out)
+                  ])
+        # self.model = Sequential([
+        #     Dense(64, activation='selu', input_shape=(self.n_in,)),
+        #     Dense(32, activation='selu'),
+        #     Dense(3, activation='softmax')
+        #     ])
+        # # compile
+        # self.model.compile(Adam(lr=self.lrate),loss='categorical_crossentropy', metrics=['accuracy'])
+        
         print (self.model.summary())
         return self.model
 
@@ -157,7 +205,9 @@ class MLPregressor(BaseEstimator):
         self.pred_time = toc-tic 
         return y_hat
 
+
     def evaluate(self,y_hat,y_test,results,q):
+        # import scorers as sc
         scoreDict = {'R2': sc.r2,
                      'RMSE': sc.log_rmse,
                      'RMSELE': sc.log_rmsele,
@@ -168,12 +218,29 @@ class MLPregressor(BaseEstimator):
         # revert back to un-transformed data
         y_hat = self.transform_inverse(y_hat)
         y_test = self.transform_inverse(y_test)
-        y_hat = pd.DataFrame(np.exp(y_hat), columns=self.vars)
-        y_test = pd.DataFrame(np.exp(y_test), columns=self.vars)
+        # y_hat = np.exp(y_hat)
+        y_hat = pd.DataFrame(y_hat, columns=self.vars)
+
+        #clus = y_test[:,-1:].astype(int)
+        #y_test = np.where(y_test[:,:-1] == 1, 0, y_test[:,:-1])
+        #y_test = np.hstack((y_test,clus))
+        # y_test = np.exp(y_test)
+        y_test = pd.DataFrame(y_test, columns=self.vars)
+        # clus = np.exp(y_test.cluster)
+        # y_test['cluster'] = clus
     
         for band in self.vars:
+            if band in ['cluster']:
+                continue
+
             y_t = y_test.loc[:,band].astype(float)
             y_h = y_hat.loc[:,band].astype(float)
+            
+            # for PC = 0 instances
+            # true = np.logical_and(y_h > 0, y_t > 0)
+            # true = y_t > 0
+            # y_t = y_t[true]
+            # y_h = y_h[true]
 
             for stat in scoreDict:
                 results[band][q][stat].append(scoreDict[stat](y_t,y_h))
@@ -183,11 +250,9 @@ class MLPregressor(BaseEstimator):
             results['pred_time'].append(self.pred_time)
             results['fit_time'].append(self.fit_time)            
         return results
-
-
     
-               
-            
+           
+         
         
     
     
